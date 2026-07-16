@@ -16,6 +16,12 @@ export function Hero() {
       id="hero"
       className="relative flex min-h-[100dvh] flex-col justify-center overflow-hidden px-6 pt-24 pb-16 md:px-10"
     >
+      <div aria-hidden className="hero-grid pointer-events-none absolute inset-0 opacity-[0.5]" />
+      <div
+        aria-hidden
+        className="hero-glow pointer-events-none absolute -left-1/4 -top-1/4 h-[70vw] w-[70vw] max-h-[720px] max-w-[720px]"
+      />
+
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
         <div>
           <motion.p
@@ -54,18 +60,23 @@ export function Hero() {
             initial={reduceMotion ? false : { y: 16 }}
             animate={{ y: 0 }}
             transition={{ delay: 2.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4"
           >
-            <MagneticButton as={Link} href="/resume">
+            <MagneticButton as="a" href={profile.resumeUrl} download>
               <span className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-colors">
                 <FileText className="h-4 w-4" strokeWidth={1.5} />
-                View Resume
+                Download Resume
               </span>
             </MagneticButton>
-            <MagneticButton as="a" href={`mailto:${profile.email}?subject=Let's talk`}>
-              <span className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent">
-                Book a Call
+            <MagneticButton as={Link} href="/projects" strength={0.2}>
+              <span className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline">
+                View Case Studies
                 <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
+              </span>
+            </MagneticButton>
+            <MagneticButton as="a" href={`mailto:${profile.email}?subject=Let's talk`} strength={0.2}>
+              <span className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-muted underline-offset-4 hover:text-foreground hover:underline">
+                Let&rsquo;s Connect
               </span>
             </MagneticButton>
           </motion.div>
@@ -79,6 +90,22 @@ export function Hero() {
           <CredibilityPanel />
         </motion.div>
       </div>
+
+      <motion.div
+        initial={reduceMotion ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3.2, duration: 0.8 }}
+        aria-hidden
+        className="absolute inset-x-0 bottom-8 hidden justify-center md:flex"
+      >
+        <div className="relative h-10 w-px overflow-hidden bg-border">
+          <motion.div
+            className="absolute inset-x-0 top-0 h-1/2 bg-accent"
+            animate={reduceMotion ? { y: 0 } : { y: ["-100%", "200%"] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }

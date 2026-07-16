@@ -120,6 +120,35 @@ body {
   display: none;
 }
 
+.hero-grid {
+  background-image: linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 30%, black 40%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 60% at 30% 30%, black 40%, transparent 80%);
+}
+
+.hero-glow {
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  animation: hero-drift 18s ease-in-out infinite;
+}
+
+@keyframes hero-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(3%, -4%) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow {
+    animation: none;
+  }
+}
+
 .grain {
   position: fixed;
   inset: 0;

@@ -18,14 +18,14 @@ export function RoleTicker() {
 
   if (reduceMotion) {
     return (
-      <div className="mt-3 h-6 overflow-hidden text-sm uppercase tracking-[0.2em] text-accent">
+      <div className="mt-3 min-h-[1.1rem] leading-tight text-[10.5px] uppercase tracking-[0.04em] text-accent sm:h-6 sm:overflow-hidden sm:text-sm sm:leading-6 sm:tracking-[0.2em]">
         <span className="block">{profile.roles[0]}</span>
       </div>
     );
   }
 
   return (
-    <div className="mt-3 h-6 overflow-hidden text-sm uppercase tracking-[0.2em] text-accent">
+    <div className="mt-3 min-h-[1.1rem] leading-tight text-[10.5px] uppercase tracking-[0.04em] text-accent sm:h-6 sm:overflow-hidden sm:text-sm sm:leading-6 sm:tracking-[0.2em]">
       <AnimatePresence mode="wait">
         <motion.span
           key={profile.roles[index]}
