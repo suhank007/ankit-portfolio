@@ -120,25 +120,27 @@ export type SkillNode = {
   name: string;
   category: "Analytics" | "Platform" | "Engineering" | "PLM" | "AI & Automation";
   years: string;
+  logo?: string;
   blurb: string;
 };
 
 export const skills: SkillNode[] = [
-  { name: "Power BI", category: "Analytics", years: "6+ yrs · PL-300 Certified", blurb: "Advanced DAX, RLS, paginated reports, flagship platform across Air France, Dior, AXA, and Sanofi engagements." },
+  { name: "Power BI", category: "Analytics", years: "6+ yrs · PL-300 Certified", logo: "/logos/powerbi.svg", blurb: "Advanced DAX, RLS, paginated reports, flagship platform across Air France, Dior, AXA, and Sanofi engagements." },
   { name: "SQL", category: "Engineering", years: "9+ yrs", blurb: "T-SQL and Oracle SQL across warehousing, reporting, and migration projects since Capgemini." },
-  { name: "Azure", category: "Platform", years: "5+ yrs", blurb: "Data Factory, DevOps, and Power Platform for enterprise analytics pipelines." },
-  { name: "Databricks", category: "Platform", years: "Since 2025 · Advarra migration", blurb: "Led migration off Oracle SQL Server to a cloud-native lakehouse architecture." },
-  { name: "Microsoft Fabric", category: "Platform", years: "Applied 2025-26", blurb: "Part of the modern analytics stack alongside Databricks and Snowflake on recent programmes." },
-  { name: "Snowflake", category: "Platform", years: "Since 2025 · Advarra", blurb: "Governed on dbt for regulated, self-service reporting suites." },
-  { name: "dbt", category: "Engineering", years: "Since 2025", blurb: "Transformation layer for Snowflake-governed analytics at Advarra." },
-  { name: "Python", category: "Engineering", years: "6+ yrs", blurb: "Data engineering scripts, automation, and AI tooling across engagements." },
+  { name: "Azure", category: "Platform", years: "5+ yrs", logo: "/logos/azure.svg", blurb: "Data Factory, DevOps, and Power Platform for enterprise analytics pipelines." },
+  { name: "AWS", category: "Platform", years: "Applied on select engagements", logo: "/logos/aws.svg", blurb: "Cloud infrastructure familiarity alongside the primary Microsoft analytics stack." },
+  { name: "Databricks", category: "Platform", years: "Since 2025 · Advarra migration", logo: "/logos/databricks.svg", blurb: "Led migration off Oracle SQL Server to a cloud-native lakehouse architecture." },
+  { name: "Microsoft Fabric", category: "Platform", years: "Applied 2025-26", logo: "/logos/fabric.svg", blurb: "Part of the modern analytics stack alongside Databricks and Snowflake on recent programmes." },
+  { name: "Snowflake", category: "Platform", years: "Since 2025 · Advarra", logo: "/logos/snowflake.svg", blurb: "Governed on dbt for regulated, self-service reporting suites." },
+  { name: "dbt", category: "Engineering", years: "Since 2025", logo: "/logos/dbt.svg", blurb: "Transformation layer for Snowflake-governed analytics at Advarra." },
+  { name: "Python", category: "Engineering", years: "6+ yrs", logo: "/logos/python.svg", blurb: "Data engineering scripts, automation, and AI tooling across engagements." },
   { name: "Power Automate", category: "AI & Automation", years: "4+ yrs", blurb: "Power Platform workflow automation across enterprise systems." },
   { name: "Office Scripts", category: "AI & Automation", years: "3+ yrs", blurb: "Excel automation for reporting teams inside Microsoft 365." },
   { name: "Power Query", category: "Analytics", years: "6+ yrs", blurb: "ETL and data modelling logic inside the Power BI / Microsoft stack." },
   { name: "GitHub", category: "Engineering", years: "5+ yrs", blurb: "Version control and collaboration across delivery teams." },
   { name: "Azure DevOps", category: "Engineering", years: "4+ yrs", blurb: "Pipelines, boards, and release management for analytics platforms." },
-  { name: "Tableau", category: "Analytics", years: "3+ yrs", blurb: "Dashboard design for clients running outside the Microsoft stack." },
-  { name: "Looker Studio", category: "Analytics", years: "Lightweight reporting", blurb: "Used for smaller-scope client reporting needs." },
+  { name: "Tableau", category: "Analytics", years: "3+ yrs", logo: "/logos/tableau.svg", blurb: "Dashboard design for clients running outside the Microsoft stack." },
+  { name: "Looker Studio", category: "Analytics", years: "Lightweight reporting", logo: "/logos/looker.svg", blurb: "Used for smaller-scope client reporting needs." },
   { name: "PLM", category: "PLM", years: "Current focus · Atlas Copco", blurb: "Product lifecycle data strategy across 15+ European product companies." },
   { name: "ENOVIA", category: "PLM", years: "Since 2026", blurb: "EBOM/MBOM workflows and ENOVIA data structures on the 3DEXPERIENCE platform." },
   { name: "3DEXPERIENCE", category: "PLM", years: "Since 2026", blurb: "Dassault Systèmes platform for the Atlas Copco PLM transformation." },

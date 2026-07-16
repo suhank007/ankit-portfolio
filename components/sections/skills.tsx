@@ -46,17 +46,20 @@ export function Skills() {
                       <button
                         key={skill.name}
                         type="button"
-
                         onMouseEnter={() => setActive(skill)}
                         onFocus={() => setActive(skill)}
                         onClick={() => setActive(skill)}
                         className={cn(
-                          "cursor-pointer rounded-full border px-4 py-2 text-sm transition-all duration-300",
+                          "inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm transition-all duration-300",
                           active.name === skill.name
                             ? "border-accent bg-accent-soft text-foreground shadow-[0_0_0_1px_var(--accent)]"
                             : "border-border text-muted hover:border-accent hover:text-foreground"
                         )}
                       >
+                        {skill.logo && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={skill.logo} alt="" aria-hidden className="h-4 w-4" />
+                        )}
                         {skill.name}
                       </button>
                     ))}
@@ -75,9 +78,15 @@ export function Skills() {
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="rounded-3xl border border-border bg-surface p-8"
               >
-                <p className="text-xs uppercase tracking-[0.25em] text-accent">
-                  {active.category}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xs uppercase tracking-[0.25em] text-accent">
+                    {active.category}
+                  </p>
+                  {active.logo && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={active.logo} alt="" aria-hidden className="h-7 w-7" />
+                  )}
+                </div>
                 <h3 className="mt-3 font-sans font-semibold tracking-tight text-3xl text-foreground">{active.name}</h3>
                 <p className="mt-4 text-sm leading-relaxed text-muted">{active.blurb}</p>
                 <div className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted">
