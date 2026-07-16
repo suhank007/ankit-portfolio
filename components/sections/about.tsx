@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { timeline, certifications, education, profile } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
+import { LogoBadge } from "@/components/ui/logo-badge";
 
 export function About() {
   const ref = useRef<HTMLDivElement>(null);
@@ -46,9 +47,7 @@ export function About() {
                     className="w-fit rounded-2xl border border-border bg-surface px-4 py-3"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-accent/40 text-xs font-semibold text-accent">
-                        {edu.initials}
-                      </div>
+                      <LogoBadge logo={edu.logo} initials={edu.initials} name={edu.institution} />
                       <div>
                         <p className="text-sm font-medium text-foreground">{edu.degree}</p>
                         <p className="text-xs text-muted">

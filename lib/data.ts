@@ -177,6 +177,7 @@ export const skills: SkillNode[] = [
 export type ExperienceEntry = {
   company: string;
   initials: string;
+  logo?: string;
   role: string;
   period: string;
   location: string;
@@ -188,6 +189,7 @@ export const experience: ExperienceEntry[] = [
   {
     company: "We.PLM",
     initials: "W",
+    logo: "/logos/we.plm.jpeg",
     role: "PLM & Data Transformation Consultant",
     period: "Mar 2026 - Present",
     location: "Paris, France",
@@ -202,6 +204,7 @@ export const experience: ExperienceEntry[] = [
   {
     company: "Iris Software",
     initials: "IS",
+    logo: "/logos/iris.png",
     role: "Lead Data & Analytics Consultant",
     period: "Nov 2025 - Feb 2026",
     location: "India · Remote",
@@ -216,6 +219,7 @@ export const experience: ExperienceEntry[] = [
   {
     company: "Cognizant Technologies",
     initials: "CT",
+    logo: "/logos/cognizant.png",
     role: "Product Owner & Senior BI Analytics Consultant",
     period: "Jan 2020 - Sept 2025",
     location: "Paris, France",
@@ -233,6 +237,7 @@ export const experience: ExperienceEntry[] = [
   {
     company: "Liebherr Aerospace and Transportation",
     initials: "LB",
+    logo: "/logos/liebherr_aerospace_and_transportation_logo.jpeg",
     role: "Data Analyst Intern",
     period: "Jul 2019 - Jan 2020",
     location: "Toulouse, France",
@@ -245,6 +250,7 @@ export const experience: ExperienceEntry[] = [
   {
     company: "Capgemini",
     initials: "CG",
+    logo: "/logos/capgemini.png",
     role: "Business Analyst / Scrum Coordinator",
     period: "Aug 2015 - Aug 2018",
     location: "Bangalore, India",
@@ -260,6 +266,7 @@ export type Education = {
   degree: string;
   institution: string;
   initials: string;
+  logo?: string;
   period: string;
   note?: string;
   honors?: string[];
@@ -270,6 +277,7 @@ export const education: Education[] = [
     degree: "MSc, Big Data, Marketing & Management",
     institution: "Toulouse Business School, France",
     initials: "TBS",
+    logo: "/logos/tbs.png",
     period: "2018 - 2020",
     note: "Graduated with Distinction, Summa Cum Laude, 3.8 GPA",
     honors: [
@@ -282,6 +290,7 @@ export const education: Education[] = [
     degree: "B-Tech, Electronics & Telecommunication",
     institution: "Lovely Professional University, India",
     initials: "LPU",
+    logo: "/logos/lpu.png",
     period: "2010 - 2014",
   },
 ];

@@ -5,6 +5,7 @@ import { motion, useScroll } from "framer-motion";
 import { experience } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
 import { LocationIcon } from "@/components/ui/location-icon";
+import { LogoBadge } from "@/components/ui/logo-badge";
 
 export function Experience() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -36,9 +37,7 @@ export function Experience() {
             >
               <div className="flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.25em] text-muted">{role.period}</p>
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border text-xs font-semibold text-foreground">
-                  {role.initials}
-                </div>
+                <LogoBadge logo={role.logo} initials={role.initials} name={role.company} />
               </div>
               <h3 className="mt-3 font-sans font-semibold tracking-tight text-2xl text-foreground">{role.company}</h3>
               <p className="mt-1 text-sm text-accent">{role.role}</p>

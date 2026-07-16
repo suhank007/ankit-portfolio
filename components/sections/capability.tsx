@@ -1,7 +1,16 @@
 "use client";
 
+import { Factory, Gem, HeartPulse, Landmark, Plane } from "lucide-react";
 import { capabilityMap, industries } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
+
+const industryIcons: Record<string, typeof Plane> = {
+  Aviation: Plane,
+  Manufacturing: Factory,
+  "Luxury Retail": Gem,
+  Healthcare: HeartPulse,
+  "Financial Services": Landmark,
+};
 
 export function Capability() {
   return (
@@ -47,14 +56,18 @@ export function Capability() {
         <Reveal index={1} className="mt-10 border-t border-border pt-10">
           <p className="text-xs uppercase tracking-[0.2em] text-muted">Industries served</p>
           <div className="mt-4 flex flex-wrap gap-3">
-            {industries.map((industry) => (
-              <span
-                key={industry}
-                className="rounded-full border border-border px-4 py-2 text-sm text-foreground"
-              >
-                {industry}
-              </span>
-            ))}
+            {industries.map((industry) => {
+              const Icon = industryIcons[industry];
+              return (
+                <span
+                  key={industry}
+                  className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-foreground"
+                >
+                  {Icon && <Icon className="h-4 w-4 text-accent" strokeWidth={1.5} />}
+                  {industry}
+                </span>
+              );
+            })}
           </div>
         </Reveal>
       </div>
