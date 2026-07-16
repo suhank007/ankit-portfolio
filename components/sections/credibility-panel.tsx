@@ -5,6 +5,7 @@ import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { achievements, profile } from "@/lib/data";
 import { RoleTicker } from "@/components/sections/role-ticker";
+import { AnimatedStat } from "@/components/ui/animated-stat";
 
 export function CredibilityPanel() {
   return (
@@ -30,7 +31,7 @@ export function CredibilityPanel() {
         {achievements.map((item) => (
           <div key={item.label}>
             <dt className="font-mono text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-              {item.value}
+              <AnimatedStat value={item.value} />
             </dt>
             <dd className="mt-2 text-xs leading-relaxed text-muted">{item.label}</dd>
           </div>
