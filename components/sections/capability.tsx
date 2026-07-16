@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/reveal";
 
 export function Capability() {
   return (
-    <section id="capability" className="px-6 py-28 md:px-10 md:py-40">
+    <section id="capability" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="max-w-2xl text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl">

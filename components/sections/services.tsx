@@ -10,7 +10,7 @@ export function Services() {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section id="services" className="px-6 py-28 md:px-10 md:py-40">
+    <section id="services" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="max-w-xl text-balance font-sans font-semibold tracking-tight text-4xl leading-tight text-foreground md:text-5xl">

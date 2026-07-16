@@ -6,6 +6,7 @@ import { ArrowUpRight, FileText } from "lucide-react";
 import { profile, heroHeadline, heroSub } from "@/lib/data";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CredibilityPanel } from "@/components/sections/credibility-panel";
+import { LocationIcon } from "@/components/ui/location-icon";
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
@@ -23,7 +24,10 @@ export function Hero() {
             transition={{ delay: 1.8, duration: 0.7 }}
             className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-[0.2em] text-muted"
           >
-            <span>{profile.location}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <LocationIcon location={profile.location} className="h-3.5 w-3.5 text-accent" />
+              {profile.location}
+            </span>
             <span className="h-1 w-1 rounded-full bg-accent" />
             <span>{profile.experienceYears} Years Experience</span>
           </motion.p>

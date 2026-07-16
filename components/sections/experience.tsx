@@ -4,13 +4,14 @@ import { useRef } from "react";
 import { motion, useScroll } from "framer-motion";
 import { experience } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
+import { LocationIcon } from "@/components/ui/location-icon";
 
 export function Experience() {
   const trackRef = useRef<HTMLDivElement>(null);
   const { scrollXProgress } = useScroll({ container: trackRef });
 
   return (
-    <section id="experience" className="py-28 md:py-40">
+    <section id="experience" className="py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6 md:px-10">
         <Reveal>
           <h2 className="max-w-xl text-balance font-sans font-semibold tracking-tight text-4xl leading-tight text-foreground md:text-5xl">
@@ -33,10 +34,18 @@ export function Experience() {
               transition={{ duration: 0.7, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
               className="w-[85vw] flex-shrink-0 snap-start rounded-3xl border border-border bg-surface p-8 md:w-[440px]"
             >
-              <p className="text-xs uppercase tracking-[0.25em] text-muted">{role.period}</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase tracking-[0.25em] text-muted">{role.period}</p>
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border text-xs font-semibold text-foreground">
+                  {role.initials}
+                </div>
+              </div>
               <h3 className="mt-3 font-sans font-semibold tracking-tight text-2xl text-foreground">{role.company}</h3>
               <p className="mt-1 text-sm text-accent">{role.role}</p>
-              <p className="mt-1 text-xs text-muted">{role.location}</p>
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+                <LocationIcon location={role.location} className="h-3.5 w-3.5 shrink-0" />
+                {role.location}
+              </p>
               <p className="mt-4 inline-block rounded-full border border-border px-3 py-1 text-xs text-foreground">
                 {role.scope}
               </p>

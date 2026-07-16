@@ -14,7 +14,7 @@ export function About() {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="about" className="px-6 py-28 md:px-10 md:py-40">
+    <section id="about" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-12 md:grid-cols-[1fr_1.6fr]">
           <div className="md:sticky md:top-32 md:self-start">

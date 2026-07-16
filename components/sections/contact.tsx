@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Check, Copy, MapPin } from "lucide-react";
+import { ArrowUpRight, Check, Copy } from "lucide-react";
 import { profile } from "@/lib/data";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { Reveal } from "@/components/ui/reveal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
+import { LocationIcon } from "@/components/ui/location-icon";
 
 export function Contact() {
   const [copied, setCopied] = useState(false);
@@ -18,7 +19,7 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden px-6 py-28 md:px-10 md:py-40">
+    <section id="contact" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-28">
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-accent-soft blur-3xl"
@@ -84,7 +85,7 @@ export function Contact() {
               <GithubIcon className="h-4 w-4" />
             </a>
             <span className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm text-muted">
-              <MapPin className="h-4 w-4" strokeWidth={1.5} />
+              <LocationIcon location={profile.location} className="h-4 w-4" />
               {profile.location}
             </span>
           </div>

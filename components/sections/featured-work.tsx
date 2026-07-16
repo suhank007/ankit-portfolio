@@ -7,7 +7,7 @@ import { Reveal } from "@/components/ui/reveal";
 
 export function FeaturedWork() {
   return (
-    <section id="work" className="px-6 py-28 md:px-10 md:py-40">
+    <section id="work" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">

@@ -4,6 +4,17 @@ import { ExternalLink } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import type { CaseStudy } from "@/lib/data";
 
+const techLogos: Record<string, string> = {
+  "Power BI": "/logos/powerbi.svg",
+  "Microsoft Azure": "/logos/azure.svg",
+  "Azure Data Factory": "/logos/azure.svg",
+  Databricks: "/logos/databricks.svg",
+  Python: "/logos/python.svg",
+  Snowflake: "/logos/snowflake.svg",
+  Tableau: "/logos/tableau.svg",
+  dbt: "/logos/dbt.svg",
+};
+
 export function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
   return (
     <Reveal
@@ -39,8 +50,12 @@ export function CaseStudyCard({ study, index }: { study: CaseStudy; index: numbe
             {study.technology.map((tech) => (
               <span
                 key={tech}
-                className="rounded-full border border-border px-3 py-1 text-xs text-muted"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs text-muted"
               >
+                {techLogos[tech] && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={techLogos[tech]} alt="" aria-hidden className="h-3.5 w-3.5" />
+                )}
                 {tech}
               </span>
             ))}

@@ -12,7 +12,7 @@ export function Skills() {
   const [active, setActive] = useState<SkillNode>(skills[0]);
 
   return (
-    <section id="skills" className="relative overflow-hidden px-6 py-28 md:px-10 md:py-40">
+    <section id="skills" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-28">
       <svg
         aria-hidden
         className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.15]"
