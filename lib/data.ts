@@ -157,6 +157,7 @@ export type ExperienceEntry = {
   role: string;
   period: string;
   location: string;
+  scope: string;
   impact: string[];
 };
 
@@ -166,6 +167,7 @@ export const experience: ExperienceEntry[] = [
     role: "PLM & Data Transformation Consultant",
     period: "Mar 2026 - Present",
     location: "Paris, France",
+    scope: "15+ European entities · multi-million-euro programme",
     impact: [
       "Leading enterprise analytics and BI initiatives for a multi-million-euro digital transformation programme spanning 15+ European business entities on 3DEXPERIENCE / ENOVIA.",
       "Defined analytics strategy, reporting governance and KPI frameworks with senior programme leadership, improving executive decision-making across complex transformation workstreams.",
@@ -178,6 +180,7 @@ export const experience: ExperienceEntry[] = [
     role: "Lead Data & Analytics Consultant",
     period: "Nov 2025 - Feb 2026",
     location: "India · Remote",
+    scope: "8-person cross-functional team · 4 initiatives delivered",
     impact: [
       "Client: Advarra (Clinical Research Compliance & Technology Platform).",
       "Migrated clinical analytics off legacy Oracle SQL Server onto a cloud-native Databricks, Snowflake and dbt ecosystem, cutting weekly reporting overhead by roughly 40 hours.",
@@ -190,6 +193,7 @@ export const experience: ExperienceEntry[] = [
     role: "Product Owner & Senior BI Analytics Consultant",
     period: "Jan 2020 - Sept 2025",
     location: "Paris, France",
+    scope: "5+ enterprise clients · multi-country delivery",
     impact: [
       "Progressed from BI Consultant to Senior Consultant & Product Owner (2022-2025) across 5+ enterprise clients.",
       "Air France: developed a commercial intelligence platform covering OTP, Revenue, Delay Root Cause and CSAT KPIs, reducing decision cycles from 10-15 days.",
@@ -205,6 +209,7 @@ export const experience: ExperienceEntry[] = [
     role: "Data Analyst Intern",
     period: "Jul 2019 - Jan 2020",
     location: "Toulouse, France",
+    scope: "6-month internship · individual contributor",
     impact: [
       "Applied Value Stream Mapping to identify critical KPIs and define improvement roadmaps adopted by operations leadership.",
       "Produced data-driven AS-IS/TO-BE process models translating analysis into actionable recommendations.",
@@ -215,6 +220,7 @@ export const experience: ExperienceEntry[] = [
     role: "Business Analyst / Scrum Coordinator",
     period: "Aug 2015 - Aug 2018",
     location: "Bangalore, India",
+    scope: "15-person delivery team · Société Générale account",
     impact: [
       "Client: Société Générale (Paris), security operations reporting across 3 global regions.",
       "Facilitated the shift from Waterfall to Agile for a 15-person delivery team, defining the initial product backlog.",

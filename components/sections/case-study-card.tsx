@@ -6,7 +6,11 @@ import type { CaseStudy } from "@/lib/data";
 
 export function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
   return (
-    <Reveal index={index % 3} className="border-t border-border py-14 first:border-t-0 first:pt-0">
+    <Reveal
+      index={index % 3}
+      className="scroll-mt-28 border-t border-border py-14 first:border-t-0 first:pt-0"
+      id={study.slug}
+    >
       <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted">

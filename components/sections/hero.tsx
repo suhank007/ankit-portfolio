@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight, Download } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, FileText } from "lucide-react";
 import { profile, heroHeadline, heroSub } from "@/lib/data";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CredibilityPanel } from "@/components/sections/credibility-panel";
@@ -49,10 +50,10 @@ export function Hero() {
             transition={{ delay: 2.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <MagneticButton as="a" href={profile.resumeUrl} download>
+            <MagneticButton as={Link} href="/resume">
               <span className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-colors">
-                <Download className="h-4 w-4" strokeWidth={1.5} />
-                Download Resume
+                <FileText className="h-4 w-4" strokeWidth={1.5} />
+                View Resume
               </span>
             </MagneticButton>
             <MagneticButton as="a" href={`mailto:${profile.email}?subject=Let's talk`}>

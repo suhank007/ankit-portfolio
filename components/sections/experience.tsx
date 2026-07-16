@@ -37,6 +37,9 @@ export function Experience() {
               <h3 className="mt-3 font-sans font-semibold tracking-tight text-2xl text-foreground">{role.company}</h3>
               <p className="mt-1 text-sm text-accent">{role.role}</p>
               <p className="mt-1 text-xs text-muted">{role.location}</p>
+              <p className="mt-4 inline-block rounded-full border border-border px-3 py-1 text-xs text-foreground">
+                {role.scope}
+              </p>
               <ul className="mt-6 space-y-3">
                 {role.impact.map((line, j) => (
                   <li key={j} className="flex gap-3 text-sm leading-relaxed text-muted">

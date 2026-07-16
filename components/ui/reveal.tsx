@@ -22,15 +22,18 @@ export function Reveal({
   className,
   index = 0,
   as = "div",
+  id,
 }: {
   children: ReactNode;
   className?: string;
   index?: number;
   as?: "div" | "span" | "li";
+  id?: string;
 }) {
   const Component = motion[as];
   return (
     <Component
+      id={id}
       className={cn(className)}
       custom={index}
       initial="hidden"
