@@ -18,6 +18,8 @@ export const profile = {
   calendly: "https://calendly.com/parihara90/30min",
   resumeUrl: "/resume.pdf",
   photo: "/photo.jpg",
+  residency: "Permanent Resident of France",
+  relocation: "Open to Global Relocation",
 };
 
 export const heroHeadline = "Data strategy for teams that can't afford to guess.";
@@ -80,6 +82,12 @@ export type TimelineStop = {
 };
 
 export const timeline: TimelineStop[] = [
+  {
+    year: "2008",
+    title: "An Early Sign",
+    description:
+      "State-level winner, Logical Reasoning competition, India. An early, if unlikely, preview of a career spent structuring ambiguity into decisions.",
+  },
   {
     year: "2010 - 2014",
     title: "India",
@@ -251,20 +259,29 @@ export const experience: ExperienceEntry[] = [
 export type Education = {
   degree: string;
   institution: string;
+  initials: string;
   period: string;
   note?: string;
+  honors?: string[];
 };
 
 export const education: Education[] = [
   {
-    degree: "MSc Big Data, Marketing & Management",
+    degree: "MSc, Big Data, Marketing & Management",
     institution: "Toulouse Business School, France",
+    initials: "TBS",
     period: "2018 - 2020",
-    note: "Graduated with Distinction",
+    note: "Graduated with Distinction, Summa Cum Laude, 3.8 GPA",
+    honors: [
+      "Grande École",
+      "Triple-accredited: AACSB, EQUIS, AMBA",
+      "Top 1% of business schools worldwide",
+    ],
   },
   {
     degree: "B-Tech, Electronics & Telecommunication",
     institution: "Lovely Professional University, India",
+    initials: "LPU",
     period: "2010 - 2014",
   },
 ];

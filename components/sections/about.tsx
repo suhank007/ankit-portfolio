@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { timeline, certifications } from "@/lib/data";
+import { timeline, certifications, education, profile } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
 
 export function About() {
@@ -27,9 +27,56 @@ export function About() {
                 and PLM transformation programmes, every stop sharpened one
                 obsession: making data legible enough to act on.
               </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                <span className="w-fit rounded-full border border-accent/40 bg-accent-soft px-3 py-1.5 text-xs text-foreground">
+                  {profile.residency}
+                </span>
+                <span className="w-fit rounded-full border border-border px-3 py-1.5 text-xs text-muted">
+                  {profile.relocation}
+                </span>
+              </div>
             </Reveal>
 
             <Reveal index={1} className="mt-10">
+              <p className="text-xs uppercase tracking-[0.25em] text-muted">Education</p>
+              <div className="mt-3 flex flex-col gap-3">
+                {education.map((edu) => (
+                  <div
+                    key={edu.degree}
+                    className="w-fit rounded-2xl border border-border bg-surface px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-accent/40 text-xs font-semibold text-accent">
+                        {edu.initials}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{edu.degree}</p>
+                        <p className="text-xs text-muted">
+                          {edu.institution} · {edu.period}
+                        </p>
+                      </div>
+                    </div>
+                    {edu.note && (
+                      <p className="mt-2 text-xs text-foreground">{edu.note}</p>
+                    )}
+                    {edu.honors && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {edu.honors.map((honor) => (
+                          <span
+                            key={honor}
+                            className="rounded-full border border-border px-2.5 py-1 text-[11px] text-muted"
+                          >
+                            {honor}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            <Reveal index={2} className="mt-10">
               <p className="text-xs uppercase tracking-[0.25em] text-muted">Certified</p>
               <div className="mt-3 flex flex-col gap-2">
                 {certifications.map((cert) =>
