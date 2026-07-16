@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, type ReactNode, type ElementType } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export function MagneticButton({
@@ -18,6 +18,7 @@ export function MagneticButton({
   [key: string]: unknown;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { damping: 15, stiffness: 200, mass: 0.5 });
@@ -25,6 +26,7 @@ export function MagneticButton({
   const Component = useMemo(() => motion.create(as), [as]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (reduceMotion) return;
     const bounds = ref.current?.getBoundingClientRect();
     if (!bounds) return;
     const relX = e.clientX - bounds.left - bounds.width / 2;
