@@ -1,6 +1,6 @@
 "use client";
 
-import { competencies, industries } from "@/lib/data";
+import { capabilityMap, industries } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
 
 export function Capability() {
@@ -18,15 +18,33 @@ export function Capability() {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-          {competencies.map((item, i) => (
-            <Reveal key={item} index={i % 6} className="border-t border-border pt-4">
-              <p className="text-base font-medium text-foreground">{item}</p>
+        <div className="mt-16 grid gap-6 md:grid-cols-2">
+          {capabilityMap.map((group, i) => (
+            <Reveal
+              key={group.domain}
+              index={i}
+              className="rounded-2xl border border-border bg-surface p-8"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                  {group.domain}
+                </h3>
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+              </div>
+              <p className="mt-2 text-sm text-muted">{group.description}</p>
+              <ul className="mt-6 space-y-3 border-t border-border pt-6">
+                {group.items.map((item) => (
+                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-foreground">
+                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
           ))}
         </div>
 
-        <Reveal index={1} className="mt-16 border-t border-border pt-10">
+        <Reveal index={1} className="mt-10 border-t border-border pt-10">
           <p className="text-xs uppercase tracking-[0.2em] text-muted">Industries served</p>
           <div className="mt-4 flex flex-wrap gap-3">
             {industries.map((industry) => (

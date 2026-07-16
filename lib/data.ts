@@ -44,19 +44,33 @@ export const industries = [
   "Financial Services",
 ];
 
-export const competencies = [
-  "Business Transformation Strategy",
-  "Enterprise Data Strategy",
-  "AI Strategy & Business Enablement",
-  "Digital Transformation",
-  "Product Management",
-  "Programme & Portfolio Governance",
-  "Executive Stakeholder Management",
-  "Enterprise Analytics & Business Intelligence",
-  "Data Governance & Operating Model",
-  "Change Management & Organisational Adoption",
-  "Cross-Functional Leadership",
-  "Strategic Planning & Decision Support",
+export type CapabilityDomain = {
+  domain: string;
+  description: string;
+  items: string[];
+};
+
+export const capabilityMap: CapabilityDomain[] = [
+  {
+    domain: "Strategy & Transformation",
+    description: "Setting direction and driving change through it.",
+    items: ["Business Transformation Strategy", "Digital Transformation", "Strategic Planning & Decision Support"],
+  },
+  {
+    domain: "Data & Technology",
+    description: "The platforms and intelligence that support decisions.",
+    items: ["Enterprise Data Strategy", "Enterprise Analytics & Business Intelligence", "AI Strategy & Business Enablement"],
+  },
+  {
+    domain: "Governance & Delivery",
+    description: "The frameworks that keep large programmes accountable.",
+    items: ["Programme & Portfolio Governance", "Data Governance & Operating Model", "Product Management"],
+  },
+  {
+    domain: "Leadership & Change",
+    description: "Bringing people and stakeholders through the transition.",
+    items: ["Executive Stakeholder Management", "Cross-Functional Leadership", "Change Management & Organisational Adoption"],
+  },
 ];
 
 export type TimelineStop = {
