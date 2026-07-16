@@ -9,18 +9,19 @@ import { RoleTicker } from "@/components/sections/role-ticker";
 export function CredibilityPanel() {
   return (
     <div className="rounded-2xl border border-border bg-surface/60 p-6 backdrop-blur-sm md:p-8">
-      <div className="flex items-center gap-4">
-        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-border bg-background">
+      <div className="flex items-center gap-5">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-border bg-background md:h-28 md:w-28">
           <Image
             src={profile.photo}
             alt={profile.name}
             fill
-            sizes="56px"
+            sizes="112px"
             className="object-cover"
+            priority
           />
         </div>
         <div>
-          <p className="text-sm font-semibold tracking-tight text-foreground">{profile.name}</p>
+          <p className="text-lg font-semibold tracking-tight text-foreground">{profile.name}</p>
           <RoleTicker />
         </div>
       </div>
