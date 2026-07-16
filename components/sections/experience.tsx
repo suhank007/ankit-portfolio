@@ -35,9 +35,9 @@ export function Experience() {
               transition={{ duration: 0.7, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
               className="w-[85vw] flex-shrink-0 snap-start rounded-3xl border border-border bg-surface p-8 md:w-[440px]"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-4">
                 <p className="text-xs uppercase tracking-[0.25em] text-muted">{role.period}</p>
-                <LogoBadge logo={role.logo} initials={role.initials} name={role.company} />
+                <LogoBadge logo={role.logo} initials={role.initials} name={role.company} size={48} wide />
               </div>
               <h3 className="mt-3 font-sans font-semibold tracking-tight text-2xl text-foreground">{role.company}</h3>
               <p className="mt-1 text-sm text-accent">{role.role}</p>

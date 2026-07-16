@@ -5,12 +5,16 @@ export function LogoBadge({
   initials,
   name,
   size = 36,
+  wide = false,
 }: {
   logo?: string;
   initials: string;
   name: string;
   size?: number;
+  wide?: boolean;
 }) {
+  const width = wide ? Math.round(size * 2.4) : size;
+
   if (!logo) {
     return (
       <div
@@ -24,10 +28,10 @@ export function LogoBadge({
 
   return (
     <div
-      style={{ width: size, height: size }}
-      className="relative shrink-0 overflow-hidden rounded-lg border border-border bg-white p-1.5"
+      style={{ width, height: size }}
+      className="relative shrink-0 overflow-hidden rounded-lg border border-border bg-white p-2"
     >
-      <Image src={logo} alt={name} fill sizes={`${size}px`} className="object-contain p-1" />
+      <Image src={logo} alt={name} fill sizes={`${width}px`} className="object-contain p-1" />
     </div>
   );
 }
