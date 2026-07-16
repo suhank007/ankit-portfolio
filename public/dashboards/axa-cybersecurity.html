@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXA Cybersecurity Intelligence Dashboard (illustrative reconstruction)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif}
+.wrap{background:#0a0f2e;width:100%;color:#fff}
+.topbar{background:#00008f;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #e60026}
+.tb-l{display:flex;align-items:center;gap:10px}
+.axa-logo{font-size:18px;font-weight:900;color:#fff;letter-spacing:-1px;border:2px solid rgba(255,255,255,.3);padding:3px 8px;border-radius:3px;position:relative}
+.axa-slash{position:absolute;top:-6px;right:-5px;width:12px;height:2px;background:#e60026;transform:rotate(-45deg)}
+.tb-title{font-size:12px;font-weight:700;color:#fff}
+.tb-sub{font-size:9px;color:#9ab0f0;letter-spacing:.5px}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tbadge{background:rgba(255,255,255,.1);border:0.5px solid rgba(255,255,255,.2);border-radius:3px;padding:3px 8px;font-size:9px;color:#aabbee}
+.threat-ticker{display:flex;align-items:center;gap:6px;font-size:9px}
+.tt-dot{width:7px;height:7px;border-radius:50%;animation:blink 1s infinite}
+.tt-red{background:#e60026}
+.tt-grn{background:#2ecc71}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.nav{background:#0d1433;display:flex;padding:0 18px;border-bottom:0.5px solid rgba(255,255,255,.08);overflow-x:auto}
+.ntab{padding:9px 14px;font-size:10px;color:#4a6090;cursor:pointer;border-bottom:2px solid transparent;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;transition:all .2s}
+.ntab:hover{color:#8899cc}
+.ntab.on{color:#fff;border-bottom-color:#e60026}
+.sec{display:none;padding:14px 16px}
+.sec.on{display:block}
+
+.scorecard-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:#e60026;margin-bottom:14px;border-radius:6px;overflow:hidden}
+.scard{background:#0d1a4a;padding:12px 10px;text-align:center}
+.scard-val{font-size:22px;font-weight:700;color:#fff;line-height:1}
+.scard-lbl{font-size:8px;color:#7a9be0;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.scard-delta{font-size:9px;margin-top:2px}
+.up{color:#2ecc71}.dn{color:#e60026}.neu{color:#8899aa}
+
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.side-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.tri-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.quad-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+
+.panel{background:#0d1a4a;border-radius:8px;padding:13px 14px;border:0.5px solid rgba(100,140,255,.15)}
+.panel-dark{background:#060e28;border-radius:8px;padding:13px 14px;border:0.5px solid rgba(255,255,255,.06)}
+.panel-red{background:#1a0610;border-radius:8px;padding:13px 14px;border:0.5px solid rgba(230,0,38,.25)}
+.panel-title{font-size:10px;font-weight:700;color:#c0d0ff;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.panel-sub{font-size:9px;color:#4a6090;font-weight:400}
+.panel-title-red{font-size:10px;font-weight:700;color:#ff9999;margin-bottom:10px}
+
+.alert-feed{display:flex;flex-direction:column;gap:6px}
+.af-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:5px;font-size:10px;cursor:pointer;transition:background .15s}
+.af-row:hover{background:rgba(255,255,255,.05)}
+.af-sev{width:4px;border-radius:2px;align-self:stretch;flex-shrink:0}
+.af-c{background:#e60026}.af-h{background:#e07b00}.af-m{background:#f0c040}.af-l{background:#2ecc71}
+.af-bg-c{background:rgba(230,0,38,.08)}
+.af-bg-h{background:rgba(224,123,0,.08)}
+.af-bg-m{background:rgba(240,192,64,.05)}
+.af-bg-l{background:rgba(46,204,113,.05)}
+.af-id{color:#7a9be0;font-family:monospace;font-size:9px;width:60px;flex-shrink:0}
+.af-desc{flex:1;color:#c0d0ff}
+.af-badge{padding:2px 6px;border-radius:3px;font-size:8px;font-weight:700}
+.b-c{background:#e60026;color:#fff}
+.b-h{background:#e07b00;color:#fff}
+.b-m{background:#f0c040;color:#4a3000}
+.b-l{background:#1a4a2a;color:#2ecc71}
+.af-time{font-size:8px;color:#4a6090;width:36px;text-align:right}
+
+.heat-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:6px}
+.hcell{height:22px;border-radius:3px;cursor:pointer;transition:opacity .15s}
+.hcell:hover{opacity:.8}
+
+.ring-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.ring-val{font-size:24px;font-weight:700;color:#fff;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.ring-lbl{font-size:9px;color:#7a9be0;text-transform:uppercase;letter-spacing:.4px}
+
+.compliance-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.cr-lbl{font-size:9px;color:#8899cc;width:90px;flex-shrink:0}
+.cr-track{flex:1;height:8px;background:#0a0f2e;border-radius:4px;overflow:hidden;border:0.5px solid rgba(255,255,255,.08)}
+.cr-fill{height:100%;border-radius:4px;transition:width .7s}
+.cr-val{font-size:9px;font-weight:700;width:28px;text-align:right}
+
+.timeline{display:flex;flex-direction:column;gap:8px}
+.tl-row{display:flex;gap:10px;align-items:flex-start}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.tl-line{width:10px;display:flex;flex-direction:column;align-items:center}
+.tl-connector{width:1px;flex:1;background:rgba(255,255,255,.1);margin:3px 0}
+.tl-content{flex:1;font-size:9px;color:#8899cc;line-height:1.4}
+.tl-content strong{color:#c0d0ff;display:block;font-size:10px}
+
+.spend-bar-wrap{display:flex;flex-direction:column;gap:6px}
+.sb-row{display:flex;align-items:center;gap:8px}
+.sb-lbl{font-size:9px;color:#8899cc;width:100px;flex-shrink:0}
+.sb-track{flex:1;height:18px;background:#0a0f2e;border-radius:4px;overflow:hidden;border:0.5px solid rgba(255,255,255,.06);position:relative}
+.sb-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:8px;font-weight:700;color:rgba(255,255,255,.9)}
+.sb-pct{font-size:9px;color:#fff;font-weight:700;width:34px;text-align:right}
+
+.risk-matrix{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);gap:3px}
+.rm-cell{border-radius:3px;padding:4px 2px;text-align:center;font-size:8px;cursor:default;min-height:28px;display:flex;align-items:center;justify-content:center}
+
+.stat-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,.06);font-size:10px}
+.stat-row:last-child{border-bottom:none}
+.stat-lbl{color:#7a9be0}
+.stat-val{color:#fff;font-weight:700}
+
+.arch-flow{display:flex;flex-direction:column;gap:8px}
+.arch-tier{display:flex;gap:6px}
+.arch-node{flex:1;background:#060e28;border:0.5px solid rgba(100,140,255,.2);border-radius:5px;padding:8px 8px;text-align:center;font-size:9px;color:#8899cc;position:relative}
+.arch-node.active{border-color:rgba(230,0,38,.4);color:#ff9999}
+.arch-node.output{border-color:rgba(46,204,113,.3);color:#80e8a8}
+.arch-tier-label{font-size:8px;color:#4a6090;width:60px;display:flex;align-items:center;flex-shrink:0;text-transform:uppercase;letter-spacing:.4px}
+.arch-arrow{text-align:center;color:#2a3a6a;font-size:12px;margin:2px 0}
+.tech-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:12px;font-size:8px;border:0.5px solid rgba(100,140,255,.2);color:#7a9be0;margin:3px 3px 0 0}
+
+.kpi-hexgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.hex-kpi{background:#0d1a4a;border-radius:8px;padding:14px 12px;border:0.5px solid rgba(100,140,255,.12);display:flex;flex-direction:column;align-items:center;text-align:center}
+.hkv{font-size:26px;font-weight:700;line-height:1}
+.hkl{font-size:8px;color:#7a9be0;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.hkd{font-size:8px;margin-top:3px}
+
+.tab-pills{display:flex;gap:5px;margin-bottom:10px}
+.tp{padding:3px 10px;border-radius:12px;font-size:9px;cursor:pointer;border:0.5px solid rgba(100,140,255,.2);color:#7a9be0;transition:all .15s}
+.tp.on{background:#00008f;color:#fff;border-color:#00008f}
+
+.gauge-svg{display:block;margin:0 auto}
+.recon-banner{background:#1a0f3a;border-bottom:1px solid #4a3a7a;color:#c0aaee;font-size:11px;padding:6px 16px;text-align:center}
+</style>
+</head>
+<body>
+<div class="recon-banner">Illustrative reconstruction built to demonstrate methodology. Figures shown are synthetic sample data, not real AXA production data.</div>
+<div class="wrap">
+<div class="topbar">
+  <div class="tb-l">
+    <div class="axa-logo">AXA<div class="axa-slash"></div></div>
+    <div>
+      <div class="tb-title">Cybersecurity Intelligence &amp; Risk Analytics Platform</div>
+      <div class="tb-sub">Enterprise BI Architecture, AXA Insurance Group</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <div class="threat-ticker"><div class="tt-dot tt-red"></div><span style="color:#ff7788;font-size:9px">3 Critical Active</span></div>
+    <div class="threat-ticker"><div class="tt-dot tt-grn"></div><span style="color:#2ecc71;font-size:9px">SOC Online</span></div>
+    <div class="tbadge">Azure · Power BI · RLS</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="ntab on" onclick="showTab('threat',this)">Threat Command</div>
+  <div class="ntab" onclick="showTab('risk',this)">Risk Intelligence</div>
+  <div class="ntab" onclick="showTab('financial',this)">Financial Governance</div>
+  <div class="ntab" onclick="showTab('compliance',this)">Compliance Radar</div>
+  <div class="ntab" onclick="showTab('arch',this)">Data Architecture</div>
+</div>
+
+<!-- TAB 1: THREAT COMMAND -->
+<div id="t-threat" class="sec on">
+  <div class="scorecard-strip">
+    <div class="scard"><div class="scard-val" style="color:#e60026">12</div><div class="scard-lbl">Critical Threats</div><div class="scard-delta dn">▲ 4 this week</div></div>
+    <div class="scard"><div class="scard-val">247</div><div class="scard-lbl">Total Incidents</div><div class="scard-delta up">▼ 30% YoY</div></div>
+    <div class="scard"><div class="scard-val">3.8h</div><div class="scard-lbl">Avg MTTR</div><div class="scard-delta up">▼ improved</div></div>
+    <div class="scard"><div class="scard-val" style="color:#2ecc71">96%</div><div class="scard-lbl">Detection Rate</div><div class="scard-delta up">▲ 2% vs target</div></div>
+    <div class="scard"><div class="scard-val">38</div><div class="scard-lbl">Active Alerts</div><div class="scard-delta dn">▲ 7 since 00:00</div></div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-title">Live Threat Alert Feed <span class="panel-sub">SOC real-time · CDG timezone</span></div>
+      <div class="tab-pills">
+        <div class="tp on" onclick="filterAl('all',this)">All</div>
+        <div class="tp" onclick="filterAl('c',this)">Critical</div>
+        <div class="tp" onclick="filterAl('h',this)">High</div>
+        <div class="tp" onclick="filterAl('m',this)">Medium</div>
+        <div class="tp" onclick="filterAl('l',this)">Low</div>
+      </div>
+      <div class="alert-feed" id="alertFeed">
+        <div class="af-row af-bg-c" data-s="c"><div class="af-sev af-c"></div><span class="af-id">INC-4421</span><span class="af-desc">Ransomware attempt, Finance SQL Server</span><span class="af-badge b-c">Critical</span><span class="af-time">02:14</span></div>
+        <div class="af-row af-bg-c" data-s="c"><div class="af-sev af-c"></div><span class="af-id">INC-4402</span><span class="af-desc">Data exfiltration, CRM API endpoint</span><span class="af-badge b-c">Critical</span><span class="af-time">01:47</span></div>
+        <div class="af-row af-bg-h" data-s="h"><div class="af-sev af-h"></div><span class="af-id">INC-4398</span><span class="af-desc">Privilege escalation, Active Directory</span><span class="af-badge b-h">High</span><span class="af-time">01:22</span></div>
+        <div class="af-row af-bg-h" data-s="h"><div class="af-sev af-h"></div><span class="af-id">INC-4375</span><span class="af-desc">Phishing campaign, Email gateway</span><span class="af-badge b-h">High</span><span class="af-time">00:58</span></div>
+        <div class="af-row af-bg-c" data-s="c"><div class="af-sev af-c"></div><span class="af-id">INC-4340</span><span class="af-desc">SQL injection, Oracle production DB</span><span class="af-badge b-c">Critical</span><span class="af-time">00:31</span></div>
+        <div class="af-row af-bg-m" data-s="m"><div class="af-sev af-m"></div><span class="af-id">INC-4387</span><span class="af-desc">Suspicious VPN login, Paris HQ</span><span class="af-badge b-m">Medium</span><span class="af-time">00:19</span></div>
+        <div class="af-row af-bg-m" data-s="m"><div class="af-sev af-m"></div><span class="af-id">INC-4355</span><span class="af-desc">DLP policy violation, Endpoint</span><span class="af-badge b-m">Medium</span><span class="af-time">00:08</span></div>
+        <div class="af-row af-bg-l" data-s="l"><div class="af-sev af-l"></div><span class="af-id">INC-4368</span><span class="af-desc">Port scan detected, DMZ perimeter</span><span class="af-badge b-l">Low</span><span class="af-time">23:54</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="panel-title">Incident Heatmap <span class="panel-sub">By hour · last 7 days</span></div>
+        <div style="display:flex;gap:3px;margin-bottom:4px">
+          <div style="width:60px"></div>
+          <div style="display:flex;flex:1;justify-content:space-between;font-size:7px;color:#4a6090">
+            <span>00</span><span>04</span><span>08</span><span>12</span><span>16</span><span>20</span>
+          </div>
+        </div>
+        <div id="heatmap" style="display:flex;flex-direction:column;gap:3px"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:8px;color:#4a6090">
+          <span>Low</span>
+          <div style="display:flex;gap:2px">
+            <div style="width:10px;height:10px;border-radius:2px;background:#0d1a4a"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:#1a2a7a"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:#2040b0"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:#7000a0"></div>
+            <div style="width:10px;height:10px;border-radius:2px;background:#e60026"></div>
+          </div>
+          <span>High</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Incident Categories</div>
+        <div style="position:relative;height:120px"><canvas id="c-cat" role="img" aria-label="Donut chart of incident categories">Malware 28%, Phishing 24%, Insider 18%, Network 16%, Breach 14%.</canvas></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:6px">
+          <span style="font-size:8px;color:#8899cc;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:2px;background:#00008f"></span>Malware 28%</span>
+          <span style="font-size:8px;color:#8899cc;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:2px;background:#e60026"></span>Phishing 24%</span>
+          <span style="font-size:8px;color:#8899cc;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:2px;background:#2060c0"></span>Insider 18%</span>
+          <span style="font-size:8px;color:#8899cc;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:2px;background:#e07b00"></span>Network 16%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Monthly Threat Volume by Severity <span class="panel-sub">Jan-Dec 2024 stacked</span></div>
+    <div style="position:relative;height:130px"><canvas id="c-monthly" role="img" aria-label="Stacked bar chart of monthly incident volumes by severity">Critical threats declining across 2024.</canvas></div>
+  </div>
+</div>
+
+<!-- TAB 2: RISK INTELLIGENCE -->
+<div id="t-risk" class="sec">
+  <div class="kpi-hexgrid">
+    <div class="hex-kpi"><div class="hkv" style="color:#e60026">94%</div><div class="hkl">Compliance Score</div><div class="hkd up">▲ 3% vs Q3</div></div>
+    <div class="hex-kpi"><div class="hkv" style="color:#f0c040">91.4%</div><div class="hkl">SLA Compliance</div><div class="hkd up">▲ 1.2% on target</div></div>
+    <div class="hex-kpi"><div class="hkv" style="color:#2ecc71">68%</div><div class="hkl">3rd Party Risk</div><div class="hkd dn">▼ weakest domain</div></div>
+    <div class="hex-kpi"><div class="hkv" style="color:#7a9be0">4.2x</div><div class="hkl">Security ROI</div><div class="hkd up">▲ 0.3x YoY</div></div>
+  </div>
+
+  <div class="tri-grid">
+    <div class="panel">
+      <div class="panel-title">Risk Exposure by Region</div>
+      <div style="position:relative;height:160px"><canvas id="c-region" role="img" aria-label="Radar chart showing risk exposure across 6 AXA regions">France highest risk, US lowest.</canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Control Effectiveness</div>
+      <div style="margin-top:4px">
+        <div class="compliance-row"><span class="cr-lbl">Endpoint</span><div class="cr-track"><div class="cr-fill" style="width:95%;background:#2ecc71"></div></div><span class="cr-val" style="color:#2ecc71">95%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Network</span><div class="cr-track"><div class="cr-fill" style="width:91%;background:#2ecc71"></div></div><span class="cr-val" style="color:#2ecc71">91%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Identity</span><div class="cr-track"><div class="cr-fill" style="width:88%;background:#7a9be0"></div></div><span class="cr-val" style="color:#7a9be0">88%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Data Loss</span><div class="cr-track"><div class="cr-fill" style="width:83%;background:#7a9be0"></div></div><span class="cr-val" style="color:#7a9be0">83%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Email Sec</span><div class="cr-track"><div class="cr-fill" style="width:79%;background:#f0c040"></div></div><span class="cr-val" style="color:#f0c040">79%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Vuln Mgmt</span><div class="cr-track"><div class="cr-fill" style="width:74%;background:#f0c040"></div></div><span class="cr-val" style="color:#f0c040">74%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">3rd Party</span><div class="cr-track"><div class="cr-fill" style="width:68%;background:#e60026"></div></div><span class="cr-val" style="color:#e60026">68%</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">MTTR Trend <span class="panel-sub">Hours · monthly</span></div>
+      <div style="position:relative;height:160px"><canvas id="c-mttr" role="img" aria-label="Line chart of mean time to resolve trending downward">MTTR fell from 6.2h in Jan to 3.8h in Dec.</canvas></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Risk Heat Matrix <span class="panel-sub">Likelihood x Impact, click cells to explore</span></div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div>
+        <div style="font-size:8px;color:#4a6090;margin-bottom:6px;text-align:center">Impact →</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="font-size:8px;color:#4a6090;writing-mode:vertical-rl;transform:rotate(180deg);height:120px;display:flex;align-items:center">Likelihood →</div>
+          <div id="riskMatrix" style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;width:200px"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px;font-size:8px;color:#4a6090;padding-left:16px">
+          <span>Very Low</span><span style="margin-left:10px">Low</span><span style="margin-left:10px">Med</span><span style="margin-left:8px">High</span><span style="margin-left:8px">Critical</span>
+        </div>
+      </div>
+      <div style="flex:1">
+        <div id="matrixDetail" style="background:#060e28;border-radius:6px;padding:12px;border:0.5px solid rgba(255,255,255,.06);font-size:10px;color:#8899cc;min-height:120px">
+          <div style="color:#7a9be0;margin-bottom:6px;font-weight:700">Select a risk cell to view details</div>
+          Click any cell in the matrix to see risk scenario details, current controls, and remediation status.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FINANCIAL GOVERNANCE -->
+<div id="t-financial" class="sec">
+  <div class="scorecard-strip">
+    <div class="scard"><div class="scard-val">€24.6M</div><div class="scard-lbl">Total Cyber Spend</div><div class="scard-delta up">▲ 8.2% YoY</div></div>
+    <div class="scard"><div class="scard-val" style="color:#f0c040">82%</div><div class="scard-lbl">Budget Utilized</div><div class="scard-delta neu">on track</div></div>
+    <div class="scard"><div class="scard-val" style="color:#2ecc71">€99.6K</div><div class="scard-lbl">Cost per Incident</div><div class="scard-delta up">▼ €12K reduced</div></div>
+    <div class="scard"><div class="scard-val">4.2x</div><div class="scard-lbl">Security ROI</div><div class="scard-delta up">▲ 0.3x vs last yr</div></div>
+    <div class="scard"><div class="scard-val" style="color:#e60026">€5.4M</div><div class="scard-lbl">Budget Remaining</div><div class="scard-delta neu">Q4 rollover</div></div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-title">Spend vs Budget, Monthly Waterfall <span class="panel-sub">2024 · €M</span></div>
+      <div style="position:relative;height:170px"><canvas id="c-waterfall" role="img" aria-label="Bar chart of monthly cybersecurity spend versus budget allocation">Q3 overspent by €0.4M; all other quarters within budget.</canvas></div>
+      <div style="display:flex;gap:12px;margin-top:6px;font-size:9px;color:#7a9be0">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#00008f"></span>Budget</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#2ecc71"></span>Within budget</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#e60026"></span>Over budget</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="panel-title">Allocation by Domain</div>
+        <div class="spend-bar-wrap">
+          <div class="sb-row"><span class="sb-lbl">Endpoint Security</span><div class="sb-track"><div class="sb-fill" style="width:28%;background:#00008f">28%</div></div></div>
+          <div class="sb-row"><span class="sb-lbl">Network Defense</span><div class="sb-track"><div class="sb-fill" style="width:22%;background:#1a2a8a">22%</div></div></div>
+          <div class="sb-row"><span class="sb-lbl">Identity & Access</span><div class="sb-track"><div class="sb-fill" style="width:18%;background:#2040a0">18%</div></div></div>
+          <div class="sb-row"><span class="sb-lbl">SOC Operations</span><div class="sb-track"><div class="sb-fill" style="width:14%;background:#2060c0">14%</div></div></div>
+          <div class="sb-row"><span class="sb-lbl">Compliance</span><div class="sb-track"><div class="sb-fill" style="width:9%;background:#3080d0">9%</div></div></div>
+          <div class="sb-row"><span class="sb-lbl">Training</span><div class="sb-track"><div class="sb-fill" style="width:5%;background:#40a0e0">5%</div></div></div>
+          <div class="sb-row"><span class="sb-lbl">Vendor Risk</span><div class="sb-track"><div class="sb-fill" style="width:4%;background:#50b8f0">4%</div></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Quarterly Summary</div>
+        <div class="stat-row"><span class="stat-lbl">Q1 2024</span><span class="stat-val">€5.8M</span></div>
+        <div class="stat-row"><span class="stat-lbl">Q2 2024</span><span class="stat-val">€6.1M</span></div>
+        <div class="stat-row"><span class="stat-lbl">Q3 2024</span><span class="stat-val" style="color:#e60026">€7.2M ▲</span></div>
+        <div class="stat-row"><span class="stat-lbl">Q4 2024</span><span class="stat-val">€5.5M</span></div>
+        <div class="stat-row"><span class="stat-lbl">Ancillary</span><span class="stat-val">€2.1M</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Cost per Incident vs Risk Reduction Score <span class="panel-sub">Dual axis · 2024</span></div>
+    <div style="position:relative;height:130px"><canvas id="c-roi" role="img" aria-label="Dual axis line chart of cost per incident declining and risk reduction improving">As spend became efficient, cost per incident fell while risk reduction improved.</canvas></div>
+    <div style="display:flex;gap:12px;margin-top:6px;font-size:9px;color:#7a9be0">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:2px;background:#7a9be0;display:inline-block"></span>Cost per incident (€K)</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:2px;background:#2ecc71;display:inline-block"></span>Risk reduction %</span>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: COMPLIANCE RADAR -->
+<div id="t-compliance" class="sec">
+  <div class="kpi-hexgrid">
+    <div class="hex-kpi"><div class="hkv" style="color:#2ecc71">94%</div><div class="hkl">Overall Score</div><div class="hkd up">▲ 3% this qtr</div></div>
+    <div class="hex-kpi"><div class="hkv" style="color:#7a9be0">88%</div><div class="hkl">Audit Completion</div><div class="hkd up">▲ 5% progress</div></div>
+    <div class="hex-kpi"><div class="hkv" style="color:#e60026">23</div><div class="hkl">Open Findings</div><div class="hkd dn">7 critical overdue</div></div>
+    <div class="hex-kpi"><div class="hkv" style="color:#f0c040">91.7%</div><div class="hkl">Policy Adherence</div><div class="hkd up">▲ 2.1% on target</div></div>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-title">Framework Compliance Radar <span class="panel-sub">7 regulatory frameworks · 2024</span></div>
+      <div style="position:relative;height:220px"><canvas id="c-radar" role="img" aria-label="Radar chart showing compliance scores across 7 regulatory frameworks">ISO 27001 highest at 96%, DORA lowest at 71%.</canvas></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="panel">
+        <div class="panel-title">Audit Findings Pipeline</div>
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-line"><div class="tl-dot" style="background:#e60026"></div><div class="tl-connector"></div></div>
+            <div class="tl-content"><strong>7 Critical, Overdue</strong>DORA resilience gaps, 3rd-party vendor controls pending escalation</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-line"><div class="tl-dot" style="background:#e07b00"></div><div class="tl-connector"></div></div>
+            <div class="tl-content"><strong>9 High, In Progress</strong>PCI DSS cardholder data controls, NIS2 reporting procedures</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-line"><div class="tl-dot" style="background:#f0c040"></div><div class="tl-connector"></div></div>
+            <div class="tl-content"><strong>7 Medium, Scheduled</strong>Solvency II actuarial data governance review, Q1 2025</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-line"><div class="tl-dot" style="background:#2ecc71"></div></div>
+            <div class="tl-content"><strong style="color:#2ecc71">112 Closed, Resolved</strong>Full remediation with evidence packs submitted</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Department Compliance</div>
+        <div class="compliance-row"><span class="cr-lbl">Finance & Risk</span><div class="cr-track"><div class="cr-fill" style="width:97%;background:#2ecc71"></div></div><span class="cr-val" style="color:#2ecc71">97%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Legal</span><div class="cr-track"><div class="cr-fill" style="width:96%;background:#2ecc71"></div></div><span class="cr-val" style="color:#2ecc71">96%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">IT Infra</span><div class="cr-track"><div class="cr-fill" style="width:94%;background:#7a9be0"></div></div><span class="cr-val" style="color:#7a9be0">94%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Operations</span><div class="cr-track"><div class="cr-fill" style="width:90%;background:#7a9be0"></div></div><span class="cr-val" style="color:#7a9be0">90%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">HR & People</span><div class="cr-track"><div class="cr-fill" style="width:85%;background:#f0c040"></div></div><span class="cr-val" style="color:#f0c040">85%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">Sales</span><div class="cr-track"><div class="cr-fill" style="width:79%;background:#f0c040"></div></div><span class="cr-val" style="color:#f0c040">79%</span></div>
+        <div class="compliance-row"><span class="cr-lbl">3rd Parties</span><div class="cr-track"><div class="cr-fill" style="width:68%;background:#e60026"></div></div><span class="cr-val" style="color:#e60026">68%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Compliance Score Trend, All Frameworks Monthly <span class="panel-sub">vs 90% regulatory floor</span></div>
+    <div style="position:relative;height:120px"><canvas id="c-comptrend" role="img" aria-label="Line chart of compliance score climbing from 88% to 94% across 2024, with 90% target line">Score crossed regulatory floor in April 2024 and continued improving.</canvas></div>
+  </div>
+</div>
+
+<!-- TAB 5: ARCHITECTURE -->
+<div id="t-arch" class="sec">
+  <div class="panel" style="margin-bottom:12px">
+    <div class="panel-title">Azure-Powered BI Pipeline, End-to-End Architecture</div>
+    <div class="arch-flow">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="arch-tier-label">Sources</div>
+        <div class="arch-tier" style="flex:1">
+          <div class="arch-node">Oracle SQL<br><span style="font-size:8px;color:#4a6090">Incident DB</span></div>
+          <div class="arch-node">Cyber Ticketing<br><span style="font-size:8px;color:#4a6090">ServiceNow</span></div>
+          <div class="arch-node">Excel / CSV<br><span style="font-size:8px;color:#4a6090">Finance reports</span></div>
+          <div class="arch-node">Compliance Sys<br><span style="font-size:8px;color:#4a6090">GRC platform</span></div>
+          <div class="arch-node">ERP Financial<br><span style="font-size:8px;color:#4a6090">SAP</span></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="padding-left:66px">↓ Azure Data Factory, Extract · Transform · Validate · Load ↓</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="arch-tier-label">Storage</div>
+        <div class="arch-tier" style="flex:1">
+          <div class="arch-node active">Azure Data Lake<br><span style="font-size:8px;color:#cc7788">Raw + Cleansed zones</span></div>
+          <div class="arch-node active">Star Schema DWH<br><span style="font-size:8px;color:#cc7788">Fact + Dim tables</span></div>
+          <div class="arch-node">Power Query<br><span style="font-size:8px;color:#4a6090">M transforms</span></div>
+          <div class="arch-node">Incremental<br><span style="font-size:8px;color:#4a6090">Refresh policies</span></div>
+        </div>
+      </div>
+      <div class="arch-arrow" style="padding-left:66px">↓ DirectQuery (live threats) + Import Mode (historical analytics) ↓</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="arch-tier-label">Dashboards</div>
+        <div class="arch-tier" style="flex:1">
+          <div class="arch-node output">CISO Dashboard<br><span style="font-size:8px;color:#80e8a8">Full RLS access</span></div>
+          <div class="arch-node output">Regional Mgr<br><span style="font-size:8px;color:#80e8a8">Geo filter RLS</span></div>
+          <div class="arch-node output">Dept Heads<br><span style="font-size:8px;color:#80e8a8">BU filter RLS</span></div>
+          <div class="arch-node output">Audit Team<br><span style="font-size:8px;color:#80e8a8">Compliance only</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap">
+      <span class="tech-pill">Microsoft Azure</span><span class="tech-pill">Azure Data Factory</span><span class="tech-pill">Azure Data Lake</span><span class="tech-pill">Power BI</span><span class="tech-pill">Oracle SQL</span><span class="tech-pill">Power Query</span><span class="tech-pill">DAX</span><span class="tech-pill">DirectQuery</span><span class="tech-pill">Import Mode</span><span class="tech-pill">Star Schema</span><span class="tech-pill">Row-Level Security</span><span class="tech-pill">Incremental Refresh</span>
+    </div>
+  </div>
+
+  <div class="tri-grid">
+    <div class="panel">
+      <div class="panel-title">Refresh Schedule</div>
+      <div class="stat-row"><span class="stat-lbl">Live threat feed</span><span class="stat-val" style="color:#e60026">Real-time</span></div>
+      <div class="stat-row"><span class="stat-lbl">Incident tickets</span><span style="color:#f0c040;font-weight:700">Every 15 min</span></div>
+      <div class="stat-row"><span class="stat-lbl">Financial data</span><span class="stat-val">Daily 07:00</span></div>
+      <div class="stat-row"><span class="stat-lbl">Compliance scores</span><span class="stat-val">Weekly Mon</span></div>
+      <div class="stat-row"><span class="stat-lbl">Audit findings</span><span class="stat-val">Daily 09:00</span></div>
+      <div class="stat-row"><span class="stat-lbl">Incremental mode</span><span style="color:#2ecc71;font-weight:700">Enabled</span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Core DAX Measures</div>
+      <div class="stat-row"><span style="color:#4a6090;font-family:monospace;font-size:9px">CALCULATE()</span><span class="stat-val" style="font-size:9px">KPI scoping</span></div>
+      <div class="stat-row"><span style="color:#4a6090;font-family:monospace;font-size:9px">AVERAGEX()</span><span class="stat-val" style="font-size:9px">MTTR calc</span></div>
+      <div class="stat-row"><span style="color:#4a6090;font-family:monospace;font-size:9px">TOTALYTD()</span><span class="stat-val" style="font-size:9px">YTD spend</span></div>
+      <div class="stat-row"><span style="color:#4a6090;font-family:monospace;font-size:9px">DATEADD()</span><span class="stat-val" style="font-size:9px">Period delta</span></div>
+      <div class="stat-row"><span style="color:#4a6090;font-family:monospace;font-size:9px">DIVIDE()</span><span class="stat-val" style="font-size:9px">ROI ratio</span></div>
+      <div class="stat-row"><span style="color:#4a6090;font-family:monospace;font-size:9px">RANKX()</span><span class="stat-val" style="font-size:9px">Region ranking</span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Performance Gains</div>
+      <div style="position:relative;height:130px"><canvas id="c-perf" role="img" aria-label="Horizontal bar chart showing before and after performance across 4 dimensions">All metrics improved significantly post-implementation.</canvas></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+var built={};
+var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function showTab(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('t-'+id).classList.add('on');
+  el.classList.add('on');
+  if(!built[id]){
+    if(id==='threat')buildThreat();
+    if(id==='risk')buildRisk();
+    if(id==='financial')buildFin();
+    if(id==='compliance')buildComp();
+    if(id==='arch')buildArch();
+    built[id]=true;
+  }
+}
+
+function filterAl(s,el){
+  document.querySelectorAll('.tp').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#alertFeed .af-row').forEach(r=>{
+    r.style.display=(s==='all'||r.dataset.s===s)?'flex':'none';
+  });
+}
+
+function buildHeatmap(){
+  var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var h=document.getElementById('heatmap');
+  days.forEach(function(d){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;gap:3px;align-items:center';
+    var lbl=document.createElement('div');
+    lbl.style.cssText='width:22px;font-size:7px;color:#4a6090;flex-shrink:0;text-align:right';
+    lbl.textContent=d;
+    row.appendChild(lbl);
+    for(var h2=0;h2<24;h2++){
+      var v=Math.random();
+      if(h2>=2&&h2<=5)v*=1.8;
+      if(h2>=9&&h2<=17)v*=0.5;
+      v=Math.min(v,1);
+      var cell=document.createElement('div');
+      cell.style.cssText='width:100%;height:14px;border-radius:2px;cursor:pointer;flex:1';
+      var c=v<0.2?'#0d1a4a':v<0.4?'#1a2a7a':v<0.6?'#2040b0':v<0.8?'#7000a0':'#e60026';
+      cell.style.background=c;
+      cell.title=d+' '+h2+':00, '+(v<0.2?'Low':v<0.4?'Moderate':v<0.6?'Elevated':v<0.8?'High':'Critical');
+      row.appendChild(cell);
+    }
+    h.appendChild(row);
+  });
+}
+
+function buildThreat(){
+  buildHeatmap();
+  new Chart(document.getElementById('c-cat'),{
+    type:'doughnut',
+    data:{labels:['Malware','Phishing','Insider','Network','Breach'],datasets:[{data:[28,24,18,16,14],backgroundColor:['#00008f','#e60026','#2060c0','#e07b00','#2ecc71'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false}}}
+  });
+  new Chart(document.getElementById('c-monthly'),{
+    type:'bar',
+    data:{labels:mo,datasets:[
+      {label:'Critical',data:[8,7,6,7,5,5,4,4,3,4,3,4],backgroundColor:'#e60026',stack:'s',borderRadius:2,barPercentage:.65},
+      {label:'High',data:[12,11,10,9,9,8,8,7,6,6,5,5],backgroundColor:'#e07b00',stack:'s',borderRadius:2,barPercentage:.65},
+      {label:'Medium',data:[15,13,12,10,9,9,8,8,7,7,7,6],backgroundColor:'#2040a0',stack:'s',borderRadius:2,barPercentage:.65}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,ticks:{font:{size:8},color:'#4a6090'},grid:{display:false}},y:{stacked:true,ticks:{font:{size:8},color:'#4a6090'},grid:{color:'rgba(255,255,255,.05)'}}}}
+  });
+}
+
+function buildRisk(){
+  new Chart(document.getElementById('c-region'),{
+    type:'radar',
+    data:{
+      labels:['France HQ','UK Ops','Germany','Belgium','Asia Pacific','US Markets'],
+      datasets:[
+        {label:'Risk Exposure',data:[88,72,55,50,68,35],borderColor:'#e60026',backgroundColor:'rgba(230,0,38,.15)',borderWidth:2,pointBackgroundColor:'#e60026',pointRadius:4},
+        {label:'Control Coverage',data:[94,88,82,80,75,92],borderColor:'#2ecc71',backgroundColor:'rgba(46,204,113,.08)',borderWidth:1.5,borderDash:[4,2],pointBackgroundColor:'#2ecc71',pointRadius:3}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{ticks:{font:{size:7},color:'#4a6090',backdropColor:'transparent'},grid:{color:'rgba(255,255,255,.06)'},pointLabels:{font:{size:9},color:'#8899cc'},min:0,max:100}}}
+  });
+  new Chart(document.getElementById('c-mttr'),{
+    type:'line',
+    data:{labels:mo,datasets:[{label:'MTTR',data:[6.2,5.9,5.6,5.2,5.0,4.8,4.6,4.4,4.2,4.0,3.9,3.8],borderColor:'#7a9be0',backgroundColor:'rgba(122,155,224,.1)',fill:true,tension:.5,pointRadius:3,pointBackgroundColor:'#e60026',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#4a6090'},grid:{display:false}},y:{ticks:{font:{size:8},color:'#4a6090',callback:function(v){return v+'h'}},grid:{color:'rgba(255,255,255,.05)'}}}}
+  });
+  var risks=[
+    {l:5,i:5,label:'Ransomware\nCritical',c:'#e60026'},
+    {l:5,i:4,label:'Data\nExfil',c:'#e60026'},
+    {l:4,i:5,label:'Insider\nThreat',c:'#e60026'},
+    {l:4,i:4,label:'APT\nAttack',c:'#c02000'},
+    {l:3,i:5,label:'Phishing',c:'#e07b00'},
+    {l:5,i:3,label:'DDoS',c:'#e07b00'},
+    {l:3,i:3,label:'Misconfig',c:'#b08000'},
+    {l:2,i:4,label:'3rd Party',c:'#e07b00'},
+    {l:4,i:2,label:'Credential\nLeak',c:'#b08000'},
+    {l:2,i:2,label:'Social\nEng',c:'#1a4040'},
+    {l:1,i:3,label:'Port\nScan',c:'#0d2a4a'},
+    {l:3,i:1,label:'Patch\nDelay',c:'#0d2a4a'}
+  ];
+  var details={
+    '5-5':'Ransomware: Likelihood Very High | Impact Catastrophic\nControls: Endpoint EDR, Offline backups, IR playbook\nStatus: Active monitoring',
+    '5-4':'Data Exfiltration: Likelihood Very High | Impact Critical\nControls: DLP, CASB, Network segmentation\nStatus: Recent incident INC-4402',
+    '4-5':'Insider Threat: Likelihood High | Impact Catastrophic\nControls: UEBA, PAM, Access reviews\nStatus: Review scheduled Q1 2025',
+    '4-4':'APT Campaign: Likelihood High | Impact Critical\nControls: Threat intel feed, SOC 24/7\nStatus: Active surveillance',
+    '3-5':'Phishing: Likelihood Medium | Impact Catastrophic\nControls: Email gateway, Security training\nStatus: Campaign detected INC-4375'
+  };
+  var grid=document.getElementById('riskMatrix');
+  var detail=document.getElementById('matrixDetail');
+  for(var row=5;row>=1;row--){
+    for(var col=1;col<=5;col++){
+      (function(r,c){
+        var found=risks.find(function(x){return x.l===r&&x.i===c});
+        var cell=document.createElement('div');
+        var score=r*c;
+        var bg=score>=20?'#5a0010':score>=12?'#4a2000':score>=6?'#1a2a10':'#0a1428';
+        cell.style.cssText='width:36px;height:36px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:7px;text-align:center;line-height:1.2;border:0.5px solid rgba(255,255,255,.08);transition:all .15s;background:'+bg+';color:'+(found?'#ffcccc':'#4a6090');
+        cell.textContent=found?found.label.replace('\n','\n'):'';
+        cell.title=found?found.label:'Risk level: '+(score>=20?'Critical':score>=12?'High':score>=6?'Medium':'Low');
+        cell.onmouseover=function(){this.style.border='0.5px solid rgba(230,0,38,.5)'};
+        cell.onmouseout=function(){this.style.border='0.5px solid rgba(255,255,255,.08)'};
+        cell.onclick=function(){
+          var key=r+'-'+c;
+          var d=details[key]||('Risk Score: '+score+'\nLikelihood: '+r+'/5 | Impact: '+c+'/5\nLevel: '+(score>=20?'Critical':score>=12?'High':score>=6?'Medium':'Low')+'\nNo specific scenario mapped for this cell.');
+          detail.innerHTML='<div style="color:#ff9999;margin-bottom:6px;font-weight:700">Risk Cell '+r+'x'+c+', Score '+score+'</div><div style="white-space:pre-line;color:#8899cc;font-size:9px;line-height:1.6">'+d+'</div>';
+        };
+        grid.appendChild(cell);
+      })(row,col);
+    }
+  }
+}
+
+function buildFin(){
+  var budg=[1.6,1.5,1.6,1.5,1.6,1.6,2.4,1.6,1.6,1.5,1.6,1.6];
+  var actual=[1.4,1.5,0.9,1.5,1.6,1.6,2.8,1.6,1.5,1.4,1.5,1.3];
+  var colors=actual.map(function(v,i){return v>budg[i]?'#e60026':'#2ecc71'});
+  new Chart(document.getElementById('c-waterfall'),{
+    type:'bar',
+    data:{labels:mo,datasets:[
+      {label:'Budget',data:budg,backgroundColor:'rgba(0,0,143,.4)',borderRadius:2,barPercentage:.4,order:2},
+      {label:'Actual',data:actual,backgroundColor:colors,borderRadius:2,barPercentage:.4,order:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#4a6090'},grid:{display:false}},y:{ticks:{font:{size:8},color:'#4a6090',callback:function(v){return'€'+v+'M'}},grid:{color:'rgba(255,255,255,.05)'}}}}
+  });
+  new Chart(document.getElementById('c-roi'),{
+    type:'line',
+    data:{labels:mo,datasets:[
+      {label:'Cost/Inc',data:[142,138,132,127,120,115,112,108,105,102,100,100],borderColor:'#7a9be0',backgroundColor:'rgba(122,155,224,.07)',fill:true,tension:.4,pointRadius:2,borderWidth:2},
+      {label:'Risk Reduc',data:[55,58,61,64,66,68,71,74,76,78,80,82],borderColor:'#2ecc71',backgroundColor:'transparent',tension:.4,pointRadius:2,borderDash:[3,2],borderWidth:1.5,yAxisID:'y2'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+      x:{ticks:{font:{size:8},color:'#4a6090'},grid:{display:false}},
+      y:{ticks:{font:{size:8},color:'#7a9be0',callback:function(v){return'€'+v+'K'}},grid:{color:'rgba(255,255,255,.05)'}},
+      y2:{position:'right',min:40,max:100,ticks:{font:{size:8},color:'#2ecc71',callback:function(v){return v+'%'}},grid:{display:false}}
+    }}
+  });
+}
+
+function buildComp(){
+  new Chart(document.getElementById('c-radar'),{
+    type:'radar',
+    data:{
+      labels:['ISO 27001','GDPR','SOC 2','Solvency II','PCI DSS','NIS2','DORA'],
+      datasets:[
+        {label:'2024 Score',data:[96,94,91,89,85,78,71],borderColor:'#00008f',backgroundColor:'rgba(0,0,143,.2)',borderWidth:2,pointBackgroundColor:'#7a9be0',pointRadius:4},
+        {label:'Target',data:[95,95,90,90,90,85,80],borderColor:'#e60026',backgroundColor:'transparent',borderDash:[4,2],borderWidth:1.5,pointRadius:0}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:50,max:100,ticks:{font:{size:7},color:'#4a6090',backdropColor:'transparent',stepSize:10},grid:{color:'rgba(255,255,255,.06)'},pointLabels:{font:{size:9},color:'#8899cc'}}}}
+  });
+  new Chart(document.getElementById('c-comptrend'),{
+    type:'line',
+    data:{labels:mo,datasets:[
+      {label:'Score',data:[88,88,89,90,91,91,92,92,93,93,94,94],borderColor:'#7a9be0',backgroundColor:'rgba(122,155,224,.1)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#00008f',borderWidth:2},
+      {label:'Target',data:[90,90,90,90,90,90,90,90,90,90,90,90],borderColor:'#e60026',borderDash:[5,3],borderWidth:1.5,pointRadius:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#4a6090'},grid:{display:false}},y:{min:80,max:100,ticks:{font:{size:8},color:'#4a6090',callback:function(v){return v+'%'}},grid:{color:'rgba(255,255,255,.05)'}}}}
+  });
+}
+
+function buildArch(){
+  new Chart(document.getElementById('c-perf'),{
+    type:'bar',
+    data:{labels:['Reporting','Detection','Compliance','Decision Spd'],datasets:[
+      {label:'Before',data:[100,68,55,40],backgroundColor:'rgba(230,0,38,.6)',borderRadius:2,barPercentage:.4},
+      {label:'After',data:[40,96,94,88],backgroundColor:'#00008f',borderRadius:2,barPercentage:.4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:7},color:'#4a6090'},grid:{display:false}},y:{max:110,ticks:{font:{size:8},color:'#4a6090',callback:function(v){return v+'%'}},grid:{color:'rgba(255,255,255,.05)'}}}}
+  });
+}
+
+buildThreat();
+built['threat']=true;
+</script>
+</body>
+</html>

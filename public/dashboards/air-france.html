@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air France Operations and Performance BI Dashboard (illustrative reconstruction)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif}
+.db{background:#f0f2f6;width:100%}
+.hdr{background:#0f1e35;color:#fff;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.logo-box{width:34px;height:34px;background:#d4001c;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.logo-box svg{width:22px;height:22px}
+.htitle{font-size:13px;font-weight:700;color:#fff}
+.hsub{font-size:9px;color:#7a9bbf;letter-spacing:.5px;text-transform:uppercase}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.hbadge{background:rgba(255,255,255,.1);border:0.5px solid rgba(255,255,255,.2);border-radius:3px;padding:3px 8px;font-size:9px;color:#aac4e0}
+.live{display:flex;align-items:center;gap:4px;font-size:9px;color:#4caf82}
+.ldot{width:6px;height:6px;border-radius:50%;background:#4caf82;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.nav{background:#172d4a;display:flex;gap:0;padding:0 18px;overflow-x:auto}
+.ntab{padding:9px 14px;font-size:10px;color:#6a8ab0;cursor:pointer;border-bottom:2px solid transparent;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap;transition:color .2s}
+.ntab:hover{color:#c0d4f0}
+.ntab.on{color:#fff;border-bottom-color:#d4001c}
+.sec{display:none;padding:14px 16px}
+.sec.on{display:block}
+.slbl{font-size:9px;color:#6a8090;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;font-weight:700}
+.kg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.kg4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.kg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.kg2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.kc{background:#fff;border-radius:6px;padding:10px 12px;border:0.5px solid #dde3ed;position:relative;overflow:hidden;transition:transform .15s}
+.kc:hover{transform:translateY(-1px)}
+.ka{position:absolute;top:0;left:0;width:3px;height:100%}
+.klbl{font-size:9px;color:#7a8ca0;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.kv{font-size:20px;font-weight:700;color:#0f1e35;line-height:1}
+.ku{font-size:11px;font-weight:400;color:#7a8ca0}
+.kd{font-size:9px;margin-top:3px}
+.up{color:#2e9e62}.dn{color:#d4001c}.neu{color:#7a8ca0}
+.row2{display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin-bottom:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.row32{display:grid;grid-template-columns:1.6fr 1fr;gap:10px;margin-bottom:12px}
+.cc{background:#fff;border-radius:6px;padding:12px 14px;border:0.5px solid #dde3ed}
+.cct{font-size:10px;color:#0f1e35;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.ccts{font-size:9px;color:#7a8ca0;font-weight:400}
+.ritem{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid #eef0f4}
+.ritem:last-child{border-bottom:none}
+.rlbl{font-size:10px;color:#0f1e35;width:80px;flex-shrink:0}
+.rtrack{flex:1;height:5px;background:#eef0f4;border-radius:2px;overflow:hidden}
+.rbar{height:100%;border-radius:2px;transition:width .6s}
+.rpct{font-size:9px;color:#0f1e35;font-weight:700;width:28px;text-align:right}
+.dbar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.dlbl{font-size:10px;color:#4a5a70;width:100px;flex-shrink:0}
+.dtrack{flex:1;height:6px;background:#eef0f4;border-radius:3px;overflow:hidden}
+.dfill{height:100%;border-radius:3px;transition:width .6s}
+.dpct{font-size:10px;color:#0f1e35;font-weight:700;width:28px;text-align:right}
+.iitem{background:#f7f9fc;border-radius:5px;padding:8px 10px;border-left:3px solid #d4001c;margin-bottom:6px}
+.inum{font-size:16px;font-weight:700;color:#0f1e35}
+.idsc{font-size:9px;color:#7a8ca0;margin-top:2px}
+.arch-wrap{background:#0f1e35;border-radius:6px;padding:14px}
+.arch-lbl{font-size:9px;color:#8fa8c8;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;font-weight:700}
+.arch-row{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.anode{border-radius:4px;padding:6px 10px;font-size:9px;text-align:center;flex:1;min-width:70px}
+.asrc{background:rgba(32,96,176,.2);border:0.5px solid rgba(32,96,176,.4);color:#90b8e8}
+.adwh{background:rgba(212,0,28,.15);border:0.5px solid rgba(212,0,28,.35);color:#f08090}
+.apbi{background:rgba(46,158,98,.15);border:0.5px solid rgba(46,158,98,.35);color:#80d8a8}
+.aetl{background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.12);color:#7a9bbf;font-size:8px}
+.arr{color:#3a5a7a;text-align:center;font-size:14px;width:100%}
+.tbadges{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.tbadge{background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.12);border-radius:3px;padding:2px 7px;font-size:8px;color:#8fa8c8;letter-spacing:.3px}
+.flt-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid #eef0f4;font-size:10px}
+.flt-item:last-child{border-bottom:none}
+.fstatus{padding:2px 6px;border-radius:3px;font-size:8px;font-weight:700}
+.fs-ok{background:#e6f4ee;color:#1a6e3c}
+.fs-dl{background:#fff3e0;color:#8a4a00}
+.fs-cn{background:#fdecea;color:#8a1a1a}
+.satisfaction-bar{height:8px;border-radius:4px;background:#eef0f4;overflow:hidden;margin-top:4px}
+.sat-fill{height:100%;border-radius:4px}
+.tab-filter{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tf{padding:4px 10px;border-radius:4px;font-size:9px;cursor:pointer;border:0.5px solid #dde3ed;background:#fff;color:#4a5a70;transition:all .15s}
+.tf.on{background:#0f1e35;color:#fff;border-color:#0f1e35}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid #eef0f4;font-size:10px}
+.srow:last-child{border-bottom:none}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.gauge-lbl{font-size:9px;color:#7a8ca0;text-transform:uppercase;letter-spacing:.4px}
+.gauge-val{font-size:22px;font-weight:700;color:#0f1e35}
+.gauge-sub{font-size:9px;color:#7a8ca0}
+.progress-ring{position:relative;width:70px;height:70px;margin:0 auto 4px}
+.ring-bg{fill:none;stroke:#eef0f4;stroke-width:6}
+.ring-fg{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dasharray .8s}
+.nps-seg{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.nps-lbl{font-size:9px;color:#4a5a70;width:80px}
+.nps-bar{flex:1;height:5px;background:#eef0f4;border-radius:2px;overflow:hidden}
+.nps-fill{height:100%;border-radius:2px}
+.nps-n{font-size:9px;font-weight:700;color:#0f1e35;width:24px;text-align:right}
+.rev-kpi{text-align:center;padding:8px}
+.rev-kpi .rv{font-size:18px;font-weight:700;color:#0f1e35}
+.rev-kpi .rl{font-size:9px;color:#7a8ca0;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.rev-kpi .rd{font-size:9px;margin-top:3px}
+.recon-banner{background:#fff8e1;border-bottom:1px solid #f0d060;color:#7a5a00;font-size:11px;padding:6px 16px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="recon-banner">Illustrative reconstruction built to demonstrate methodology. Figures shown are synthetic sample data, not real Air France production data.</div>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Air France Operations and Performance BI Dashboard, an interactive multi-section analytics dashboard reconstruction</h2>
+
+<div class="db">
+<div class="hdr">
+  <div class="hdr-l">
+    <div class="logo-box">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 19 L11 4 L19 12 L11 16 Z" fill="white"/></svg>
+    </div>
+    <div>
+      <div class="htitle">Air France, Operations &amp; Performance BI</div>
+      <div class="hsub">Centralized Aviation Analytics · CDG Hub 2024</div>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <div class="hbadge">SQL Server + Power BI</div>
+    <div class="hbadge">Star Schema · RLS</div>
+    <div class="live"><div class="ldot"></div>Live Feed</div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="ntab on" onclick="showTab('overview')">Executive Overview</div>
+  <div class="ntab" onclick="showTab('ops')">Operations</div>
+  <div class="ntab" onclick="showTab('cx')">Customer Experience</div>
+  <div class="ntab" onclick="showTab('rev')">Revenue &amp; Finance</div>
+  <div class="ntab" onclick="showTab('arch')">Architecture</div>
+</div>
+
+<div id="t-overview" class="sec on">
+  <div class="slbl">Executive Summary, All KPIs at a Glance</div>
+  <div class="kg">
+    <div class="kc"><div class="ka" style="background:#d4001c"></div><div class="klbl">On-Time Performance</div><div class="kv">81.6<span class="ku">%</span></div><div class="kd dn">▼ 1.2% vs last month</div></div>
+    <div class="kc"><div class="ka" style="background:#0f1e35"></div><div class="klbl">Ticket Sales</div><div class="kv">3.64<span class="ku">M</span></div><div class="kd up">▲ 8.4% YoY</div></div>
+    <div class="kc"><div class="ka" style="background:#2060b0"></div><div class="klbl">CSAT Score</div><div class="kv">7.9<span class="ku">/10</span></div><div class="kd up">▲ 0.4 vs last qtr</div></div>
+    <div class="kc"><div class="ka" style="background:#2e9e62"></div><div class="klbl">Net Promoter Score</div><div class="kv">54</div><div class="kd up">▲ 6 pts YoY</div></div>
+    <div class="kc"><div class="ka" style="background:#e07b00"></div><div class="klbl">Avg Ticket Price</div><div class="kv">€235</div><div class="kd up">▲ €12 vs last yr</div></div>
+  </div>
+  <div class="kg">
+    <div class="kc"><div class="ka" style="background:#d4001c"></div><div class="klbl">Flight Delay Rate</div><div class="kv">14.3<span class="ku">%</span></div><div class="kd dn">▲ above 12% target</div></div>
+    <div class="kc"><div class="ka" style="background:#0f1e35"></div><div class="klbl">Load Factor</div><div class="kv">84.7<span class="ku">%</span></div><div class="kd up">▲ 1.9% vs target</div></div>
+    <div class="kc"><div class="ka" style="background:#2060b0"></div><div class="klbl">Utilization Ratio</div><div class="kv">88.2<span class="ku">%</span></div><div class="kd up">▲ 2.1% vs last qtr</div></div>
+    <div class="kc"><div class="ka" style="background:#2e9e62"></div><div class="klbl">Cancellation Rate</div><div class="kv">0.9<span class="ku">%</span></div><div class="kd up">▼ 0.3% improved</div></div>
+    <div class="kc"><div class="ka" style="background:#e07b00"></div><div class="klbl">RASK</div><div class="kv">€0.087</div><div class="kd up">▲ 3.1% YoY</div></div>
+  </div>
+
+  <div class="row2">
+    <div class="cc">
+      <div class="cct">Monthly Ticket Sales + Revenue Target <span class="ccts">Jan-Dec 2024</span></div>
+      <div style="position:relative;height:160px"><canvas id="c-sales" role="img" aria-label="Monthly ticket sales bar chart with revenue target line overlay">Sales peaked in July at 420K, with revenue target tracked via red dashed line.</canvas></div>
+      <div style="display:flex;gap:12px;margin-top:6px;font-size:9px;color:#7a8ca0">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#0f1e35"></span>Ticket Sales (K)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:3px;background:#d4001c;display:inline-block"></span>Revenue Target</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cct">Business Impact (Illustrative)</div>
+      <div class="iitem"><div class="inum">60%</div><div class="idsc">Faster reporting turnaround time</div></div>
+      <div class="iitem" style="border-left-color:#0f1e35"><div class="inum">50%</div><div class="idsc">Dashboard load time reduction</div></div>
+      <div class="iitem" style="border-left-color:#2e9e62"><div class="inum">4 to 1</div><div class="idsc">Siloed systems unified into one platform</div></div>
+      <div class="iitem" style="border-left-color:#2060b0"><div class="inum">Real-time</div><div class="idsc">Operational visibility for leadership</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="t-ops" class="sec">
+  <div class="slbl">Operations Dashboard, Flight Performance &amp; Delay Analytics</div>
+  <div class="kg">
+    <div class="kc"><div class="ka" style="background:#d4001c"></div><div class="klbl">OTP</div><div class="kv">81.6<span class="ku">%</span></div><div class="kd dn">▼ below 85% target</div></div>
+    <div class="kc"><div class="ka" style="background:#e07b00"></div><div class="klbl">Avg Delay</div><div class="kv">28<span class="ku"> min</span></div><div class="kd dn">▲ 3 min vs last mo</div></div>
+    <div class="kc"><div class="ka" style="background:#0f1e35"></div><div class="klbl">Turnaround</div><div class="kv">42<span class="ku"> min</span></div><div class="kd up">▼ 3 min vs target</div></div>
+    <div class="kc"><div class="ka" style="background:#2060b0"></div><div class="klbl">Gate Efficiency</div><div class="kv">91.4<span class="ku">%</span></div><div class="kd up">▲ 1.2% vs target</div></div>
+    <div class="kc"><div class="ka" style="background:#2e9e62"></div><div class="klbl">Fuel Efficiency</div><div class="kv">3.8<span class="ku"> L/km</span></div><div class="kd up">▼ -0.2 improved</div></div>
+  </div>
+
+  <div class="tab-filter">
+    <div class="tf on" onclick="filterFlights('all',this)">All Flights</div>
+    <div class="tf" onclick="filterFlights('on-time',this)">On-Time</div>
+    <div class="tf" onclick="filterFlights('delayed',this)">Delayed</div>
+    <div class="tf" onclick="filterFlights('cancelled',this)">Cancelled</div>
+  </div>
+
+  <div class="row2">
+    <div class="cc">
+      <div class="cct">Live Flight Feed <span class="ccts">CDG departures, today</span></div>
+      <div id="flight-list">
+        <div class="flt-item" data-s="on-time"><span style="color:#0f1e35;font-weight:700">AF 011</span><span style="color:#7a8ca0">CDG→JFK</span><span>10:15</span><span class="fstatus fs-ok">On Time</span></div>
+        <div class="flt-item" data-s="delayed"><span style="color:#0f1e35;font-weight:700">AF 354</span><span style="color:#7a8ca0">CDG→MAD</span><span>11:30</span><span class="fstatus fs-dl">Delayed +35m</span></div>
+        <div class="flt-item" data-s="on-time"><span style="color:#0f1e35;font-weight:700">AF 082</span><span style="color:#7a8ca0">CDG→LHR</span><span>12:00</span><span class="fstatus fs-ok">On Time</span></div>
+        <div class="flt-item" data-s="cancelled"><span style="color:#0f1e35;font-weight:700">AF 472</span><span style="color:#7a8ca0">CDG→DXB</span><span>13:20</span><span class="fstatus fs-cn">Cancelled</span></div>
+        <div class="flt-item" data-s="on-time"><span style="color:#0f1e35;font-weight:700">AF 664</span><span style="color:#7a8ca0">CDG→FRA</span><span>13:50</span><span class="fstatus fs-ok">On Time</span></div>
+        <div class="flt-item" data-s="delayed"><span style="color:#0f1e35;font-weight:700">AF 228</span><span style="color:#7a8ca0">CDG→SIN</span><span>14:10</span><span class="fstatus fs-dl">Delayed +18m</span></div>
+        <div class="flt-item" data-s="on-time"><span style="color:#0f1e35;font-weight:700">AF 116</span><span style="color:#7a8ca0">CDG→NRT</span><span>14:45</span><span class="fstatus fs-ok">On Time</span></div>
+        <div class="flt-item" data-s="delayed"><span style="color:#0f1e35;font-weight:700">AF 390</span><span style="color:#7a8ca0">CDG→BOS</span><span>15:00</span><span class="fstatus fs-dl">Delayed +52m</span></div>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cct">Delay Causes Breakdown</div>
+      <div style="position:relative;height:140px;margin-bottom:8px"><canvas id="c-delay" role="img" aria-label="Donut chart of delay causes: Weather 38%, ATC 26%, Technical 22%, Crew 14%">Weather 38%, ATC 26%, Technical 22%, Crew 14%.</canvas></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <span style="font-size:9px;color:#7a8ca0;display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#0f1e35"></span>Weather 38%</span>
+        <span style="font-size:9px;color:#7a8ca0;display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#d4001c"></span>ATC 26%</span>
+        <span style="font-size:9px;color:#7a8ca0;display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#2060b0"></span>Technical 22%</span>
+        <span style="font-size:9px;color:#7a8ca0;display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#e07b00"></span>Crew 14%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cc" style="margin-bottom:12px">
+    <div class="cct">Route OTP Performance <span class="ccts">Top 8 routes, CDG hub</span></div>
+    <div>
+      <div class="ritem"><span class="rlbl">CDG to LHR</span><div class="rtrack"><div class="rbar" style="width:92%;background:#2e9e62"></div></div><span class="rpct">92%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to AMS</span><div class="rtrack"><div class="rbar" style="width:90%;background:#2e9e62"></div></div><span class="rpct">90%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to JFK</span><div class="rtrack"><div class="rbar" style="width:88%;background:#0f1e35"></div></div><span class="rpct">88%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to NRT</span><div class="rtrack"><div class="rbar" style="width:83%;background:#0f1e35"></div></div><span class="rpct">83%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to FRA</span><div class="rtrack"><div class="rbar" style="width:81%;background:#e07b00"></div></div><span class="rpct">81%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to SIN</span><div class="rtrack"><div class="rbar" style="width:79%;background:#e07b00"></div></div><span class="rpct">79%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to MAD</span><div class="rtrack"><div class="rbar" style="width:76%;background:#d4001c"></div></div><span class="rpct">76%</span></div>
+      <div class="ritem"><span class="rlbl">CDG to DXB</span><div class="rtrack"><div class="rbar" style="width:72%;background:#d4001c"></div></div><span class="rpct">72%</span></div>
+    </div>
+  </div>
+
+  <div class="cc">
+    <div class="cct">OTP Trend, Monthly <span class="ccts">Jan-Dec 2024</span></div>
+    <div style="position:relative;height:150px"><canvas id="c-otp" role="img" aria-label="Line chart of monthly on-time performance from January to December 2024">OTP ranged from 78% in January to 85% in June.</canvas></div>
+  </div>
+</div>
+
+<div id="t-cx" class="sec">
+  <div class="slbl">Customer Experience, Satisfaction, NPS &amp; Feedback</div>
+  <div class="kg4">
+    <div class="kc"><div class="ka" style="background:#2060b0"></div><div class="klbl">CSAT Score</div><div class="kv">7.9<span class="ku">/10</span></div><div class="kd up">▲ 0.4 vs last qtr</div></div>
+    <div class="kc"><div class="ka" style="background:#0f1e35"></div><div class="klbl">Net Promoter Score</div><div class="kv">54</div><div class="kd up">▲ 6 pts YoY</div></div>
+    <div class="kc"><div class="ka" style="background:#2e9e62"></div><div class="klbl">Resolution Rate</div><div class="kv">89.3<span class="ku">%</span></div><div class="kd up">▲ 3.1% improved</div></div>
+    <div class="kc"><div class="ka" style="background:#e07b00"></div><div class="klbl">Retention Score</div><div class="kv">73.2<span class="ku">%</span></div><div class="kd up">▲ 1.8% vs last yr</div></div>
+  </div>
+
+  <div class="row3">
+    <div class="cc">
+      <div class="cct">CSAT &amp; NPS Trend <span class="ccts">6-month rolling</span></div>
+      <div style="position:relative;height:140px;margin-bottom:6px"><canvas id="c-csat" role="img" aria-label="Line chart of CSAT and NPS over 6 months, both trending upward">CSAT improved from 7.2 to 7.9; NPS from 46 to 54.</canvas></div>
+      <div style="display:flex;gap:10px;font-size:9px;color:#7a8ca0">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:2px;background:#0f1e35;display:inline-block"></span>CSAT /10</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:2px;background:#d4001c;display:inline-block"></span>NPS /10 (scaled)</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cct">NPS Breakdown</div>
+      <div style="margin:8px 0">
+        <div class="nps-seg"><span class="nps-lbl" style="color:#2e9e62">Promoters</span><div class="nps-bar"><div class="nps-fill" style="width:62%;background:#2e9e62"></div></div><span class="nps-n">62%</span></div>
+        <div class="nps-seg"><span class="nps-lbl" style="color:#e07b00">Passives</span><div class="nps-bar"><div class="nps-fill" style="width:22%;background:#e07b00"></div></div><span class="nps-n">22%</span></div>
+        <div class="nps-seg"><span class="nps-lbl" style="color:#d4001c">Detractors</span><div class="nps-bar"><div class="nps-fill" style="width:16%;background:#d4001c"></div></div><span class="nps-n">16%</span></div>
+      </div>
+      <div style="border-top:0.5px solid #eef0f4;padding-top:8px;margin-top:4px">
+        <div class="srow"><span style="color:#7a8ca0">Avg response time</span><span style="font-weight:700">4.2 hrs</span></div>
+        <div class="srow"><span style="color:#7a8ca0">Open complaints</span><span style="font-weight:700;color:#d4001c">312</span></div>
+        <div class="srow"><span style="color:#7a8ca0">Resolved this week</span><span style="font-weight:700;color:#2e9e62">1,847</span></div>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cct">Satisfaction by Category</div>
+      <div class="dbar"><span class="dlbl">In-flight service</span><div class="dtrack"><div class="dfill" style="width:84%;background:#0f1e35"></div></div><span class="dpct">8.4</span></div>
+      <div class="dbar"><span class="dlbl">Check-in experience</span><div class="dtrack"><div class="dfill" style="width:78%;background:#2060b0"></div></div><span class="dpct">7.8</span></div>
+      <div class="dbar"><span class="dlbl">Lounge quality</span><div class="dtrack"><div class="dfill" style="width:82%;background:#2060b0"></div></div><span class="dpct">8.2</span></div>
+      <div class="dbar"><span class="dlbl">Delay communication</span><div class="dtrack"><div class="dfill" style="width:61%;background:#e07b00"></div></div><span class="dpct">6.1</span></div>
+      <div class="dbar"><span class="dlbl">Baggage handling</span><div class="dtrack"><div class="dfill" style="width:70%;background:#e07b00"></div></div><span class="dpct">7.0</span></div>
+      <div class="dbar"><span class="dlbl">Complaint resolution</span><div class="dtrack"><div class="dfill" style="width:75%;background:#2e9e62"></div></div><span class="dpct">7.5</span></div>
+    </div>
+  </div>
+
+  <div class="cc">
+    <div class="cct">Passenger Feedback Volume, Monthly <span class="ccts">Positive vs Negative</span></div>
+    <div style="position:relative;height:140px;margin-bottom:6px"><canvas id="c-feedback" role="img" aria-label="Stacked bar chart of positive and negative passenger feedback volume per month">Positive feedback consistently above 70% each month.</canvas></div>
+    <div style="display:flex;gap:12px;font-size:9px;color:#7a8ca0">
+      <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:10px;border-radius:2px;background:#2e9e62"></span>Positive feedback</span>
+      <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:10px;border-radius:2px;background:#d4001c"></span>Negative feedback</span>
+    </div>
+  </div>
+</div>
+
+<div id="t-rev" class="sec">
+  <div class="slbl">Revenue &amp; Financial Performance</div>
+  <div class="kg">
+    <div class="kc"><div class="ka" style="background:#d4001c"></div><div class="klbl">Total Revenue</div><div class="kv">€856<span class="ku">M</span></div><div class="kd up">▲ 11.2% YoY</div></div>
+    <div class="kc"><div class="ka" style="background:#0f1e35"></div><div class="klbl">Ticket Sales</div><div class="kv">3.64<span class="ku">M</span></div><div class="kd up">▲ 8.4% YoY</div></div>
+    <div class="kc"><div class="ka" style="background:#2060b0"></div><div class="klbl">Avg Ticket Price</div><div class="kv">€235</div><div class="kd up">▲ €12 vs last yr</div></div>
+    <div class="kc"><div class="ka" style="background:#2e9e62"></div><div class="klbl">RASK</div><div class="kv">€0.087</div><div class="kd up">▲ 3.1% YoY</div></div>
+    <div class="kc"><div class="ka" style="background:#e07b00"></div><div class="klbl">Load Factor</div><div class="kv">84.7<span class="ku">%</span></div><div class="kd up">▲ 1.9% vs target</div></div>
+  </div>
+
+  <div class="row3">
+    <div class="cc" style="grid-column:span 2">
+      <div class="cct">Revenue Trend + Forecast <span class="ccts">Jan-Dec 2024 · monthly</span></div>
+      <div style="position:relative;height:160px;margin-bottom:6px"><canvas id="c-rev" role="img" aria-label="Line chart showing monthly revenue trend with forecast overlay">Revenue peaked at €98M in August with Q4 showing slight softening.</canvas></div>
+      <div style="display:flex;gap:12px;font-size:9px;color:#7a8ca0">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:10px;border-radius:2px;background:#0f1e35"></span>Actual revenue (€M)</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:10px;border-radius:2px;background:#d4001c"></span>Forecast (€M)</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cct">Route Profitability</div>
+      <div class="dbar"><span class="dlbl">CDG to JFK</span><div class="dtrack"><div class="dfill" style="width:91%;background:#0f1e35"></div></div><span class="dpct">91%</span></div>
+      <div class="dbar"><span class="dlbl">CDG to LHR</span><div class="dtrack"><div class="dfill" style="width:88%;background:#0f1e35"></div></div><span class="dpct">88%</span></div>
+      <div class="dbar"><span class="dlbl">CDG to NRT</span><div class="dtrack"><div class="dfill" style="width:83%;background:#2060b0"></div></div><span class="dpct">83%</span></div>
+      <div class="dbar"><span class="dlbl">CDG to SIN</span><div class="dtrack"><div class="dfill" style="width:79%;background:#2060b0"></div></div><span class="dpct">79%</span></div>
+      <div class="dbar"><span class="dlbl">CDG to DXB</span><div class="dtrack"><div class="dfill" style="width:72%;background:#e07b00"></div></div><span class="dpct">72%</span></div>
+      <div class="dbar"><span class="dlbl">CDG to MAD</span><div class="dtrack"><div class="dfill" style="width:65%;background:#d4001c"></div></div><span class="dpct">65%</span></div>
+    </div>
+  </div>
+
+  <div class="row2">
+    <div class="cc">
+      <div class="cct">Revenue by Cabin Class <span class="ccts">2024 split</span></div>
+      <div style="position:relative;height:140px;margin-bottom:6px"><canvas id="c-cabin" role="img" aria-label="Horizontal bar chart showing revenue contribution by cabin class: Business, Economy, Premium Economy, First">Business 48%, Economy 34%, Premium Economy 13%, First 5%.</canvas></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:9px;color:#7a8ca0">
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#0f1e35"></span>Business 48%</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#2060b0"></span>Economy 34%</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#2e9e62"></span>Prem. Economy 13%</span>
+        <span style="display:flex;align-items:center;gap:3px"><span style="width:8px;height:8px;border-radius:2px;background:#e07b00"></span>First 5%</span>
+      </div>
+    </div>
+    <div class="cc">
+      <div class="cct">Quarterly Performance</div>
+      <div class="srow"><span style="color:#7a8ca0;font-size:10px">Q1 2024</span><span style="font-weight:700;font-size:12px">€188M</span><span style="font-size:9px;color:#7a8ca0">+7.2% YoY</span></div>
+      <div class="srow"><span style="color:#7a8ca0;font-size:10px">Q2 2024</span><span style="font-weight:700;font-size:12px">€214M</span><span style="font-size:9px;color:#2e9e62">+10.4% YoY</span></div>
+      <div class="srow"><span style="color:#7a8ca0;font-size:10px">Q3 2024</span><span style="font-weight:700;font-size:12px">€256M</span><span style="font-size:9px;color:#2e9e62">+14.1% YoY</span></div>
+      <div class="srow"><span style="color:#7a8ca0;font-size:10px">Q4 2024</span><span style="font-weight:700;font-size:12px">€198M</span><span style="font-size:9px;color:#e07b00">+9.8% YoY</span></div>
+      <div style="border-top:0.5px solid #eef0f4;padding-top:8px;margin-top:4px">
+        <div class="srow"><span style="color:#7a8ca0">Occupancy Rate</span><span style="font-weight:700">84.7%</span></div>
+        <div class="srow"><span style="color:#7a8ca0">Ancillary Revenue</span><span style="font-weight:700">€62M</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="t-arch" class="sec">
+  <div class="slbl">Data Architecture &amp; Technical Stack</div>
+
+  <div class="arch-wrap" style="margin-bottom:12px">
+    <div class="arch-lbl">End-to-End Data Pipeline (Illustrative)</div>
+    <div class="arch-row">
+      <div class="anode asrc">Flight Ops<br>Systems</div>
+      <div class="anode asrc">SAP CRM<br>&amp; Sales</div>
+      <div class="anode asrc">Customer<br>Feedback</div>
+      <div class="anode asrc">GDS<br>Ticketing</div>
+      <div class="anode asrc">Aircraft<br>Telemetry</div>
+    </div>
+    <div class="arr">↓ SSIS ETL Pipelines, Extract · Transform · Load · Validate ↓</div>
+    <div class="arch-row" style="margin-top:6px">
+      <div class="anode aetl">Staging Schema<br>Raw Cleansed</div>
+      <div class="anode adwh">SQL Server DWH<br>Star Schema</div>
+      <div class="anode aetl">Fact: Flights<br>Sales · Feedback</div>
+      <div class="anode aetl">Dims: Time<br>Route · Aircraft</div>
+    </div>
+    <div class="arr">↓ DirectQuery (Live Ops) + Import Mode (Historical) ↓</div>
+    <div class="arch-row" style="margin-top:6px">
+      <div class="anode apbi">Power BI<br>Service</div>
+      <div class="anode apbi">Exec Dashboard<br>Full Access</div>
+      <div class="anode apbi">Regional Mgr<br>Route Filter RLS</div>
+      <div class="anode apbi">Sales Team<br>BU Filter RLS</div>
+    </div>
+    <div class="tbadges">
+      <div class="tbadge">Power BI</div><div class="tbadge">SQL Server 2022</div><div class="tbadge">SSIS</div><div class="tbadge">DAX</div><div class="tbadge">Star Schema</div><div class="tbadge">Row-Level Security</div><div class="tbadge">DirectQuery</div><div class="tbadge">Import Mode</div><div class="tbadge">Incremental Refresh</div><div class="tbadge">Pre-Aggregated Views</div><div class="tbadge">Kimball Methodology</div>
+    </div>
+  </div>
+
+  <div class="row3">
+    <div class="cc">
+      <div class="cct">Data Refresh Schedule</div>
+      <div class="srow"><span style="color:#7a8ca0">Flight operations</span><span style="font-weight:700;color:#d4001c">Real-time</span></div>
+      <div class="srow"><span style="color:#7a8ca0">Ticket sales</span><span style="font-weight:700">Daily 06:00</span></div>
+      <div class="srow"><span style="color:#7a8ca0">Customer feedback</span><span style="font-weight:700">Weekly Mon</span></div>
+      <div class="srow"><span style="color:#7a8ca0">Revenue &amp; finance</span><span style="font-weight:700">Daily 08:00</span></div>
+      <div class="srow"><span style="color:#7a8ca0">Aircraft telemetry</span><span style="font-weight:700;color:#d4001c">Near real-time</span></div>
+      <div class="srow"><span style="color:#7a8ca0">Incremental loads</span><span style="font-weight:700;color:#2e9e62">Enabled</span></div>
+    </div>
+    <div class="cc">
+      <div class="cct">DAX Measures Used</div>
+      <div class="srow" style="font-size:10px"><span style="color:#7a8ca0;font-family:monospace">CALCULATE()</span><span style="color:#2060b0">KPI definitions</span></div>
+      <div class="srow" style="font-size:10px"><span style="color:#7a8ca0;font-family:monospace">TOTALYTD()</span><span style="color:#2060b0">YTD revenue</span></div>
+      <div class="srow" style="font-size:10px"><span style="color:#7a8ca0;font-family:monospace">DATEADD()</span><span style="color:#2060b0">Period comparison</span></div>
+      <div class="srow" style="font-size:10px"><span style="color:#7a8ca0;font-family:monospace">DISTINCTCOUNT()</span><span style="color:#2060b0">Unique passengers</span></div>
+      <div class="srow" style="font-size:10px"><span style="color:#7a8ca0;font-family:monospace">FILTER()</span><span style="color:#2060b0">Route segmentation</span></div>
+      <div class="srow" style="font-size:10px"><span style="color:#7a8ca0;font-family:monospace">PREVIOUSMONTH()</span><span style="color:#2060b0">MoM delta</span></div>
+    </div>
+    <div class="cc">
+      <div class="cct">RLS Roles &amp; Access</div>
+      <div class="iitem" style="border-left-color:#0f1e35;margin-bottom:5px"><div class="inum" style="font-size:12px">Executives</div><div class="idsc">Full cross-functional access to all KPIs</div></div>
+      <div class="iitem" style="border-left-color:#2060b0;margin-bottom:5px"><div class="inum" style="font-size:12px">Regional Managers</div><div class="idsc">Filtered by route &amp; region</div></div>
+      <div class="iitem" style="border-left-color:#2e9e62;margin-bottom:5px"><div class="inum" style="font-size:12px">Sales Teams</div><div class="idsc">Restricted to business unit data</div></div>
+      <div class="iitem" style="border-left-color:#e07b00"><div class="inum" style="font-size:12px">Customer Service</div><div class="idsc">Complaints &amp; satisfaction only</div></div>
+    </div>
+  </div>
+
+  <div class="cc" style="margin-bottom:12px">
+    <div class="cct">Performance Optimization Results <span class="ccts">Before vs After</span></div>
+    <div style="position:relative;height:140px;margin-bottom:6px"><canvas id="c-perf" role="img" aria-label="Grouped bar chart comparing before and after performance metrics for reporting time, load time, data freshness, and user adoption">All metrics improved significantly after implementation.</canvas></div>
+    <div style="display:flex;gap:12px;font-size:9px;color:#7a8ca0">
+      <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:10px;border-radius:2px;background:#d4001c"></span>Before</span>
+      <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:10px;border-radius:2px;background:#0f1e35"></span>After</span>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function showTab(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('t-'+id).classList.add('on');
+  event.target.classList.add('on');
+  if(id==='ops'&&!window.opsChartsBuilt){buildOpsCharts();window.opsChartsBuilt=true}
+  if(id==='cx'&&!window.cxChartsBuilt){buildCXCharts();window.cxChartsBuilt=true}
+  if(id==='rev'&&!window.revChartsBuilt){buildRevCharts();window.revChartsBuilt=true}
+  if(id==='arch'&&!window.archChartsBuilt){buildArchCharts();window.archChartsBuilt=true}
+}
+
+function filterFlights(s,el){
+  document.querySelectorAll('.tf').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.flt-item').forEach(f=>{
+    f.style.display=(s==='all'||f.dataset.s===s)?'flex':'none';
+  });
+}
+
+const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const sales=[210,195,280,310,340,390,420,380,360,310,290,265];
+const target=[240,240,290,290,330,360,400,370,350,320,300,280];
+
+new Chart(document.getElementById('c-sales'),{
+  type:'bar',
+  data:{labels:mo,datasets:[
+    {label:'Ticket Sales (K)',data:sales,backgroundColor:'#0f1e35',borderRadius:2,barPercentage:.6},
+    {label:'Revenue Target',data:target,type:'line',borderColor:'#d4001c',backgroundColor:'transparent',pointRadius:2,pointBackgroundColor:'#d4001c',borderDash:[3,2],borderWidth:1.5}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false}},y:{ticks:{font:{size:8},color:'#7a8ca0',callback:v=>v+'K'},grid:{color:'#f0f2f5'}}}}
+});
+
+function buildOpsCharts(){
+  new Chart(document.getElementById('c-delay'),{
+    type:'doughnut',
+    data:{labels:['Weather','ATC','Technical','Crew'],datasets:[{data:[38,26,22,14],backgroundColor:['#0f1e35','#d4001c','#2060b0','#e07b00'],borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}
+  });
+  new Chart(document.getElementById('c-otp'),{
+    type:'line',
+    data:{labels:mo,datasets:[{label:'OTP %',data:[78,79,81,83,84,85,82,81,80,82,80,79],borderColor:'#0f1e35',backgroundColor:'rgba(15,30,53,0.07)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#d4001c',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false}},y:{min:70,max:90,ticks:{font:{size:8},color:'#7a8ca0',callback:v=>v+'%'},grid:{color:'#f0f2f5'}}}}
+  });
+}
+
+function buildCXCharts(){
+  new Chart(document.getElementById('c-csat'),{
+    type:'line',
+    data:{labels:['Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[
+      {label:'CSAT',data:[7.2,7.3,7.5,7.6,7.8,7.9],borderColor:'#0f1e35',backgroundColor:'rgba(15,30,53,0.07)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#0f1e35',borderWidth:2},
+      {label:'NPS /10',data:[4.6,4.8,5.0,5.1,5.3,5.4],borderColor:'#d4001c',backgroundColor:'transparent',tension:.4,pointRadius:3,pointBackgroundColor:'#d4001c',borderDash:[4,2],borderWidth:1.5}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false}},y:{min:3,max:10,ticks:{font:{size:8},color:'#7a8ca0'},grid:{color:'#f0f2f5'}}}}
+  });
+  const pos=[1820,1950,2100,2340,2560,2700,2850,3100,2980,2740,2500,2300];
+  const neg=[380,420,360,290,310,280,260,230,240,290,320,350];
+  new Chart(document.getElementById('c-feedback'),{
+    type:'bar',
+    data:{labels:mo,datasets:[
+      {label:'Positive',data:pos,backgroundColor:'#2e9e62',stack:'a',borderRadius:2,barPercentage:.6},
+      {label:'Negative',data:neg,backgroundColor:'#d4001c',stack:'a',borderRadius:2,barPercentage:.6}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false},stacked:true},y:{stacked:true,ticks:{font:{size:8},color:'#7a8ca0'},grid:{color:'#f0f2f5'}}}}
+  });
+}
+
+function buildRevCharts(){
+  const rev=[58,62,72,80,86,94,98,95,88,80,74,69];
+  const fcast=[60,65,75,82,88,92,96,94,90,84,78,72];
+  new Chart(document.getElementById('c-rev'),{
+    type:'line',
+    data:{labels:mo,datasets:[
+      {label:'Actual',data:rev,borderColor:'#0f1e35',backgroundColor:'rgba(15,30,53,0.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#0f1e35',borderWidth:2},
+      {label:'Forecast',data:fcast,borderColor:'#d4001c',backgroundColor:'transparent',tension:.4,pointRadius:2,pointBackgroundColor:'#d4001c',borderDash:[4,2],borderWidth:1.5}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false}},y:{ticks:{font:{size:8},color:'#7a8ca0',callback:v=>'€'+v+'M'},grid:{color:'#f0f2f5'}}}}
+  });
+  new Chart(document.getElementById('c-cabin'),{
+    type:'bar',
+    data:{labels:['Business','Economy','Prem. Eco','First'],datasets:[{data:[48,34,13,5],backgroundColor:['#0f1e35','#2060b0','#2e9e62','#e07b00'],borderRadius:4,barPercentage:.6}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0',callback:v=>v+'%'},grid:{color:'#f0f2f5'}},y:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false}}}}
+  });
+}
+
+function buildArchCharts(){
+  new Chart(document.getElementById('c-perf'),{
+    type:'bar',
+    data:{labels:['Report Time','Load Time','Data Freshness','User Adoption'],datasets:[
+      {label:'Before',data:[100,100,100,40],backgroundColor:'#d4001c',borderRadius:2,barPercentage:.4},
+      {label:'After',data:[40,50,15,92],backgroundColor:'#0f1e35',borderRadius:2,barPercentage:.4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:8},color:'#7a8ca0'},grid:{display:false}},y:{ticks:{font:{size:8},color:'#7a8ca0',callback:v=>v+'%'},grid:{color:'#f0f2f5'}}}}
+  });
+}
+</script>
+</body>
+</html>
