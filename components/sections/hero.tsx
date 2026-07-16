@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, FileText } from "lucide-react";
 import { profile, heroHeadline, heroSub } from "@/lib/data";
@@ -8,6 +8,8 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CredibilityPanel } from "@/components/sections/credibility-panel";
 
 export function Hero() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section
       id="hero"
@@ -16,8 +18,8 @@ export function Hero() {
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
         <div>
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reduceMotion ? false : { y: 12 }}
+            animate={{ y: 0 }}
             transition={{ delay: 1.8, duration: 0.7 }}
             className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs uppercase tracking-[0.2em] text-muted"
           >
@@ -27,8 +29,8 @@ export function Hero() {
           </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reduceMotion ? false : { y: 20 }}
+            animate={{ y: 0 }}
             transition={{ delay: 2.0, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl text-balance text-3xl font-semibold leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl"
           >
@@ -36,8 +38,8 @@ export function Hero() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reduceMotion ? false : { y: 16 }}
+            animate={{ y: 0 }}
             transition={{ delay: 2.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 max-w-md text-lg leading-relaxed text-muted"
           >
@@ -45,8 +47,8 @@ export function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={reduceMotion ? false : { y: 16 }}
+            animate={{ y: 0 }}
             transition={{ delay: 2.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
@@ -66,8 +68,8 @@ export function Hero() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={reduceMotion ? false : { y: 24 }}
+          animate={{ y: 0 }}
           transition={{ delay: 2.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <CredibilityPanel />

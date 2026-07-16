@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
@@ -24,6 +30,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
+  const reduceMotion = useReducedMotion();
 
   useMotionValueEvent(scrollY, "change", (y) => {
     setScrolled(y > 32);
@@ -32,8 +39,8 @@ export function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={reduceMotion ? false : { y: -40 }}
+        animate={{ y: 0 }}
         transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
         className="fixed inset-x-4 top-4 z-50 md:inset-x-6 md:top-5"
       >
