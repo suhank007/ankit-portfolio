@@ -9,7 +9,7 @@ import { AnimatedStat } from "@/components/ui/animated-stat";
 
 export function CredibilityPanel() {
   return (
-    <div className="rounded-2xl border border-border bg-surface/60 p-6 backdrop-blur-sm md:p-8">
+    <div className="rounded-2xl border border-border bg-surface/60 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm md:p-8">
       <div className="flex items-center gap-5">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-border bg-background sm:h-24 sm:w-24 md:h-28 md:w-28">
           <Image

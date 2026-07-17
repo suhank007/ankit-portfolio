@@ -6,7 +6,9 @@ import { ArrowUpRight, FileText } from "lucide-react";
 import { profile, heroHeadline, heroSub } from "@/lib/data";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CredibilityPanel } from "@/components/sections/credibility-panel";
+import { HeroNetwork } from "@/components/sections/hero-network";
 import { LocationIcon } from "@/components/ui/location-icon";
+import { TiltCard } from "@/components/ui/tilt-card";
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
@@ -21,6 +23,7 @@ export function Hero() {
         aria-hidden
         className="hero-glow pointer-events-none absolute -left-1/4 -top-1/4 h-[70vw] w-[70vw] max-h-[720px] max-w-[720px]"
       />
+      <HeroNetwork />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
         <div>
@@ -87,7 +90,9 @@ export function Hero() {
           animate={{ y: 0 }}
           transition={{ delay: 2.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <CredibilityPanel />
+          <TiltCard>
+            <CredibilityPanel />
+          </TiltCard>
         </motion.div>
       </div>
 
