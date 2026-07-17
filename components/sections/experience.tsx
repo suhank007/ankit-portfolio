@@ -6,17 +6,19 @@ import { experience } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
 import { LocationIcon } from "@/components/ui/location-icon";
 import { LogoBadge } from "@/components/ui/logo-badge";
+import { useLocale } from "@/components/locale-provider";
 
 export function Experience() {
   const trackRef = useRef<HTMLDivElement>(null);
   const { scrollXProgress } = useScroll({ container: trackRef });
+  const { dict } = useLocale();
 
   return (
     <section id="experience" className="py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6 md:px-10">
         <Reveal>
           <h2 className="max-w-xl text-balance font-sans font-semibold tracking-tight text-4xl leading-tight text-foreground md:text-5xl">
-            Enterprise engagements, end to end.
+            {dict.experienceSection.headline}
           </h2>
         </Reveal>
       </div>
@@ -26,38 +28,43 @@ export function Experience() {
           ref={trackRef}
           className="scrollbar-none flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-8 md:px-10"
         >
-          {experience.map((role, i) => (
-            <motion.article
-              key={`${role.company}-${i}`}
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-10% 0px" }}
-              transition={{ duration: 0.7, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-              className="w-[85vw] flex-shrink-0 snap-start rounded-3xl border border-border bg-surface p-8 md:w-[440px]"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <p className="text-xs uppercase tracking-[0.25em] text-muted">{role.period}</p>
-                <LogoBadge logo={role.logo} initials={role.initials} name={role.company} size={48} wide />
-              </div>
-              <h3 className="mt-3 font-sans font-semibold tracking-tight text-2xl text-foreground">{role.company}</h3>
-              <p className="mt-1 text-sm text-accent">{role.role}</p>
-              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
-                <LocationIcon location={role.location} className="h-3.5 w-3.5 shrink-0" />
-                {role.location}
-              </p>
-              <p className="mt-4 inline-block rounded-full border border-border px-3 py-1 text-xs text-foreground">
-                {role.scope}
-              </p>
-              <ul className="mt-6 space-y-3">
-                {role.impact.map((line, j) => (
-                  <li key={j} className="flex gap-3 text-sm leading-relaxed text-muted">
-                    <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-accent" />
-                    {line}
-                  </li>
-                ))}
-              </ul>
-            </motion.article>
-          ))}
+          {experience.map((role, i) => {
+            const t = dict.experienceSection.entries[i];
+            return (
+              <motion.article
+                key={`${role.company}-${i}`}
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-10% 0px" }}
+                transition={{ duration: 0.7, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                className="w-[85vw] flex-shrink-0 snap-start rounded-3xl border border-border bg-surface p-8 md:w-[440px]"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <p className="text-xs uppercase tracking-[0.25em] text-muted">
+                    {t?.period ?? role.period}
+                  </p>
+                  <LogoBadge logo={role.logo} initials={role.initials} name={role.company} size={48} wide />
+                </div>
+                <h3 className="mt-3 font-sans font-semibold tracking-tight text-2xl text-foreground">{role.company}</h3>
+                <p className="mt-1 text-sm text-accent">{t?.role ?? role.role}</p>
+                <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+                  <LocationIcon location={role.location} className="h-3.5 w-3.5 shrink-0" />
+                  {t?.location ?? role.location}
+                </p>
+                <p className="mt-4 inline-block rounded-full border border-border px-3 py-1 text-xs text-foreground">
+                  {t?.scope ?? role.scope}
+                </p>
+                <ul className="mt-6 space-y-3">
+                  {(t?.impact ?? role.impact).map((line, j) => (
+                    <li key={j} className="flex gap-3 text-sm leading-relaxed text-muted">
+                      <span className="mt-2 h-1 w-1 flex-shrink-0 rounded-full bg-accent" />
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              </motion.article>
+            );
+          })}
           <div className="w-px flex-shrink-0 md:w-4" aria-hidden />
         </div>
 

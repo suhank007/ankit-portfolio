@@ -38,7 +38,7 @@ export function HeroNetwork() {
       aria-hidden
       viewBox="0 0 840 600"
       preserveAspectRatio="xMidYMid slice"
-      className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[55%] opacity-[0.13] md:block"
+      className="pointer-events-none absolute inset-y-0 end-0 hidden h-full w-[55%] opacity-[0.13] md:block rtl:-scale-x-100"
     >
       {edges.map(([a, b], i) => (
         <line

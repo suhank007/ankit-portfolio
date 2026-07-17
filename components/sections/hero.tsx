@@ -3,7 +3,8 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { ArrowUpRight, FileText } from "lucide-react";
-import { profile, heroHeadline, heroSub } from "@/lib/data";
+import { profile } from "@/lib/data";
+import { useLocale } from "@/components/locale-provider";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { CredibilityPanel } from "@/components/sections/credibility-panel";
 import { HeroNetwork } from "@/components/sections/hero-network";
@@ -12,6 +13,7 @@ import { TiltCard } from "@/components/ui/tilt-card";
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
+  const { dict } = useLocale();
 
   return (
     <section
@@ -35,10 +37,10 @@ export function Hero() {
           >
             <span className="inline-flex items-center gap-1.5">
               <LocationIcon location={profile.location} className="h-3.5 w-3.5 text-accent" />
-              {profile.location}
+              {dict.hero.location}
             </span>
             <span className="h-1 w-1 rounded-full bg-accent" />
-            <span>{profile.experienceYears} Years Experience</span>
+            <span>{dict.hero.years}</span>
           </motion.p>
 
           <motion.h1
@@ -47,7 +49,7 @@ export function Hero() {
             transition={{ delay: 2.0, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl text-balance text-3xl font-semibold leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl"
           >
-            {heroHeadline}
+            {dict.hero.headline}
           </motion.h1>
 
           <motion.p
@@ -56,7 +58,7 @@ export function Hero() {
             transition={{ delay: 2.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 max-w-md text-lg leading-relaxed text-muted"
           >
-            {heroSub}
+            {dict.hero.sub}
           </motion.p>
 
           <motion.div
@@ -68,18 +70,18 @@ export function Hero() {
             <MagneticButton as="a" href={profile.resumeUrl} download>
               <span className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-colors">
                 <FileText className="h-4 w-4" strokeWidth={1.5} />
-                Download Resume
+                {dict.hero.downloadResume}
               </span>
             </MagneticButton>
             <MagneticButton as={Link} href="/projects" strength={0.2}>
               <span className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-foreground underline-offset-4 hover:underline">
-                View Case Studies
+                {dict.hero.viewCaseStudies}
                 <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
               </span>
             </MagneticButton>
             <MagneticButton as="a" href={`mailto:${profile.email}?subject=Let's talk`} strength={0.2}>
               <span className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-muted underline-offset-4 hover:text-foreground hover:underline">
-                Let&rsquo;s Connect
+                {dict.hero.letsConnect}
               </span>
             </MagneticButton>
           </motion.div>

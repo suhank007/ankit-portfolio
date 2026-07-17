@@ -5,11 +5,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { skills, type SkillNode } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/locale-provider";
 
 const categories = Array.from(new Set(skills.map((s) => s.category)));
 
 export function Skills() {
   const [active, setActive] = useState<SkillNode>(skills[0]);
+  const { dict } = useLocale();
 
   return (
     <section id="skills" className="relative overflow-hidden px-6 py-20 md:px-10 md:py-28">
@@ -28,7 +30,7 @@ export function Skills() {
       <div className="relative mx-auto max-w-6xl">
         <Reveal>
           <h2 className="max-w-xl text-balance font-sans font-semibold tracking-tight text-4xl leading-tight text-foreground md:text-5xl">
-            A stack built across analytics, platform, and automation.
+            {dict.skillsSection.headline}
           </h2>
         </Reveal>
 
@@ -37,7 +39,7 @@ export function Skills() {
             {categories.map((category, ci) => (
               <Reveal key={category} index={ci}>
                 <p className="mb-4 text-xs uppercase tracking-[0.25em] text-muted">
-                  {category}
+                  {dict.skillsSection.categories[category] ?? category}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   {skills
@@ -80,7 +82,7 @@ export function Skills() {
               >
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-[0.25em] text-accent">
-                    {active.category}
+                    {dict.skillsSection.categories[active.category] ?? active.category}
                   </p>
                   {active.logo && (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -90,7 +92,7 @@ export function Skills() {
                 <h3 className="mt-3 font-sans font-semibold tracking-tight text-3xl text-foreground">{active.name}</h3>
                 <p className="mt-4 text-sm leading-relaxed text-muted">{active.blurb}</p>
                 <div className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted">
-                  <span>Experience</span>
+                  <span>{dict.skillsSection.experienceLabel}</span>
                   <span className="h-px flex-1 bg-border" />
                   <span className="text-foreground">{active.years}</span>
                 </div>

@@ -4,21 +4,29 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { caseStudies } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
+import { useLocale } from "@/components/locale-provider";
 
 export function FeaturedWork() {
+  const { dict } = useLocale();
+
   return (
     <section id="work" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
-            <h2 className="max-w-xl text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl">
-              Selected engagements, not GitHub repos.
-            </h2>
+            <div>
+              <h2 className="max-w-xl text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl">
+                {dict.featuredWork.headline}
+              </h2>
+              {dict.featuredWork.englishNote && (
+                <p className="mt-3 text-sm text-muted">{dict.featuredWork.englishNote}</p>
+              )}
+            </div>
             <Link
               href="/projects"
               className="inline-flex shrink-0 items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
             >
-              View all case studies
+              {dict.featuredWork.viewAll}
               <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
             </Link>
           </div>
@@ -39,7 +47,7 @@ export function FeaturedWork() {
                   {study.outcome[0]}
                 </p>
                 <span className="mt-6 inline-flex items-center gap-1.5 text-sm text-foreground">
-                  View case study
+                  {dict.featuredWork.viewCaseStudy}
                   <ArrowUpRight
                     className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                     strokeWidth={1.5}

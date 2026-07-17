@@ -12,25 +12,28 @@ import {
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
-
-const sectionLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
-];
-
-const routeLinks = [
-  { label: "Projects", href: "/projects" },
-  { label: "Resume", href: "/resume", highlight: true },
-];
+import { LanguageSwitcher } from "./language-switcher";
+import { useLocale } from "@/components/locale-provider";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
   const reduceMotion = useReducedMotion();
+  const { dict } = useLocale();
+
+  const sectionLinks = [
+    { label: dict.nav.about, href: "#about" },
+    { label: dict.nav.skills, href: "#skills" },
+    { label: dict.nav.experience, href: "#experience" },
+    { label: dict.nav.services, href: "#services" },
+    { label: dict.nav.contact, href: "#contact" },
+  ];
+
+  const routeLinks = [
+    { label: dict.nav.projects, href: "/projects", highlight: false },
+    { label: dict.nav.resume, href: "/resume", highlight: true },
+  ];
 
   useMotionValueEvent(scrollY, "change", (y) => {
     setScrolled(y > 32);
@@ -83,6 +86,9 @@ export function Navbar() {
 
           <div className="flex items-center gap-3">
             <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
+            <div className="hidden md:block">
               <ThemeToggle />
             </div>
             <button
@@ -122,7 +128,8 @@ export function Navbar() {
                 </Link>
               </motion.div>
             ))}
-            <div className="pt-4">
+            <div className="flex items-center gap-3 pt-4">
+              <LanguageSwitcher />
               <ThemeToggle />
             </div>
           </motion.div>

@@ -3,23 +3,24 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { services } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
+import { useLocale } from "@/components/locale-provider";
 
 export function Services() {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { dict } = useLocale();
 
   return (
     <section id="services" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="max-w-xl text-balance font-sans font-semibold tracking-tight text-4xl leading-tight text-foreground md:text-5xl">
-            Where I create leverage for enterprise teams.
+            {dict.servicesSection.headline}
           </h2>
         </Reveal>
 
         <div className="mt-16 border-t border-border">
-          {services.map((service, i) => (
+          {dict.servicesSection.items.map((service, i) => (
             <Reveal key={service.title} index={i % 5}>
               <a
                 href="#contact"
@@ -39,7 +40,7 @@ export function Services() {
                     {service.title}
                   </h3>
                 </div>
-                <p className="relative max-w-md text-sm leading-relaxed text-muted md:text-right">
+                <p className="relative max-w-md text-sm leading-relaxed text-muted md:text-end">
                   {service.description}
                 </p>
                 <ArrowUpRight

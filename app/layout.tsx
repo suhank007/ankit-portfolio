@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LocaleProvider } from "@/components/locale-provider";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { Navbar } from "@/components/layout/navbar";
@@ -107,13 +108,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <LoadingScreen />
-          <div className="grain" />
-          <SmoothScroll>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </SmoothScroll>
+          <LocaleProvider>
+            <LoadingScreen />
+            <div className="grain" />
+            <SmoothScroll>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+            </SmoothScroll>
+          </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>

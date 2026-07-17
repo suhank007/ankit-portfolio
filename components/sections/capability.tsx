@@ -1,34 +1,27 @@
 "use client";
 
 import { Factory, Gem, HeartPulse, Landmark, Plane } from "lucide-react";
-import { capabilityMap, industries } from "@/lib/data";
 import { Reveal } from "@/components/ui/reveal";
+import { useLocale } from "@/components/locale-provider";
 
-const industryIcons: Record<string, typeof Plane> = {
-  Aviation: Plane,
-  Manufacturing: Factory,
-  "Luxury Retail": Gem,
-  Healthcare: HeartPulse,
-  "Financial Services": Landmark,
-};
+const industryIcons = [Plane, Factory, Gem, HeartPulse, Landmark];
 
 export function Capability() {
+  const { dict } = useLocale();
   return (
     <section id="capability" className="px-6 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <h2 className="max-w-2xl text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl">
-            Business transformation first. Data platforms second.
+            {dict.capability.headline}
           </h2>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Nine years leading cross-functional programmes by aligning business
-            priorities, engaging senior stakeholders, and establishing governance
-            that survives contact with a real transformation.
+            {dict.capability.sub}
           </p>
         </Reveal>
 
         <div className="mt-16 grid gap-6 md:grid-cols-2">
-          {capabilityMap.map((group, i) => (
+          {dict.capability.domains.map((group, i) => (
             <Reveal
               key={group.domain}
               index={i}
@@ -54,10 +47,12 @@ export function Capability() {
         </div>
 
         <Reveal index={1} className="mt-10 border-t border-border pt-10">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted">Industries served</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted">
+            {dict.capability.industriesLabel}
+          </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            {industries.map((industry) => {
-              const Icon = industryIcons[industry];
+            {dict.capability.industries.map((industry, i) => {
+              const Icon = industryIcons[i];
               return (
                 <span
                   key={industry}

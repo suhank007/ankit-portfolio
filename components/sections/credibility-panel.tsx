@@ -6,8 +6,11 @@ import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { achievements, profile } from "@/lib/data";
 import { RoleTicker } from "@/components/sections/role-ticker";
 import { AnimatedStat } from "@/components/ui/animated-stat";
+import { useLocale } from "@/components/locale-provider";
 
 export function CredibilityPanel() {
+  const { dict } = useLocale();
+
   return (
     <div className="rounded-2xl border border-border bg-surface/60 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-sm md:p-8">
       <div className="flex items-center gap-5">
@@ -28,12 +31,14 @@ export function CredibilityPanel() {
       </div>
 
       <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-8">
-        {achievements.map((item) => (
+        {achievements.map((item, i) => (
           <div key={item.label}>
             <dt className="font-mono text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               <AnimatedStat value={item.value} />
             </dt>
-            <dd className="mt-2 text-xs leading-relaxed text-muted">{item.label}</dd>
+            <dd className="mt-2 text-xs leading-relaxed text-muted">
+              {dict.achievementLabels[i] ?? item.label}
+            </dd>
           </div>
         ))}
       </dl>

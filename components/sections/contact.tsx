@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { ArrowUpRight, Check, Copy } from "lucide-react";
 import { profile } from "@/lib/data";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/brand-icons";
 import { Reveal } from "@/components/ui/reveal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { LocationIcon } from "@/components/ui/location-icon";
+import { useLocale } from "@/components/locale-provider";
 
 export function Contact() {
   const [copied, setCopied] = useState(false);
+  const { dict } = useLocale();
 
   async function copyEmail() {
     await navigator.clipboard.writeText(profile.email);
@@ -27,11 +28,11 @@ export function Contact() {
 
       <div className="relative mx-auto max-w-6xl text-center">
         <Reveal>
-          <p className="text-xs uppercase tracking-[0.3em] text-accent">Get in touch</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-accent">{dict.contact.eyebrow}</p>
         </Reveal>
         <Reveal index={1}>
           <h2 className="mx-auto mt-6 max-w-3xl text-balance font-sans font-semibold tracking-tight text-[clamp(2.25rem,6vw,5rem)] leading-[1.05] text-foreground">
-            Let&rsquo;s turn your data into a decision advantage.
+            {dict.contact.headline}
           </h2>
         </Reveal>
 
@@ -61,7 +62,7 @@ export function Contact() {
 
               className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background"
             >
-              Book a Call
+              {dict.contact.bookCall}
               <ArrowUpRight className="h-4 w-4" strokeWidth={1.5} />
             </a>
             <a
@@ -86,7 +87,7 @@ export function Contact() {
             </a>
             <span className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm text-muted">
               <LocationIcon location={profile.location} className="h-4 w-4" />
-              {profile.location}
+              {dict.hero.location}
             </span>
           </div>
         </Reveal>

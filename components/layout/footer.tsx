@@ -1,7 +1,12 @@
+"use client";
+
 import { profile } from "@/lib/data";
+import { useLocale } from "@/components/locale-provider";
 
 export function Footer() {
+  const { dict } = useLocale();
   const year = new Date().getFullYear();
+
   return (
     <footer className="border-t border-border px-6 py-10 md:px-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -16,10 +21,10 @@ export function Footer() {
           <a href={profile.github} className="hover:text-foreground">
             GitHub
           </a>
-          <span>{profile.location}</span>
+          <span>{dict.hero.location}</span>
         </div>
         <p className="text-xs text-muted">
-          © {year} Ankit Parihar. All rights reserved.
+          © {year} Ankit Parihar. {dict.footer.rights}
         </p>
       </div>
     </footer>
