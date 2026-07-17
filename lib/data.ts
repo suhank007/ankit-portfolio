@@ -1,13 +1,12 @@
 export const profile = {
   name: "Ankit Parihar",
   roles: [
-    "Senior BI & Data Transformation Consultant",
-    "Business Intelligence Expert",
+    "Data Strategy Consultant",
+    "Digital Transformation Consultant",
+    "Business Data & AI Consultant",
     "PLM Data Strategy Consultant",
-    "Microsoft Fabric Specialist",
-    "Power BI Data Analyst Associate",
-    "Azure Data Engineer",
-    "AI Automation Consultant",
+    "Product Owner & Analytics Consultant",
+    "Senior BI & Data Transformation Consultant",
   ],
   location: "Paris, France",
   experienceYears: "9+",
